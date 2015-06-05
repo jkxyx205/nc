@@ -1,0 +1,203 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container {
+  width: auto;
+  max-width: 950px;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.ui-jqgrid .ui-pg-input { height:18px;}
+
+.page-header {
+	margin-top: 10px;
+}
+
+#bs-example-navbar-collapse-1,.container-fluid {
+	background-color: #008FFC;	
+	
+}
+
+/* nav start*/
+
+#nav_div {
+	background-color: white;
+}
+
+.fixed-top {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+#nav_div .navbar {
+	min-height:40px;
+}
+ 
+
+#nav_div .navbar .nav>li {
+   
+  border-right: 0px;
+ 
+  -webkit-transition: all 300ms;
+  -moz-transition: all 300ms;
+  -ms-transition: all 300ms;
+  -o-transition: all 300ms;
+  transition: all 300ms;
+}
+
+#nav_div .navbar .nav>li:hover {
+  background: #004499;
+  color:#fff;
+}
+#nav_div .navbar .nav a {  font-style:normal !important;  font-family: 'Trebuchet MS', Tahoma, Verdana, Arial, sans-serif; }
+#nav_div .navbar .nav>li:hover > a {
+  color:#fff;
+  
+}
+
+#nav_div .navbar .nav>li>a:focus,#nav_div  .navbar .nav>li>a:hover {
+  color:#fff;
+}
+ 
+
+/* active link */
+#nav_div .navbar .nav>.active>a,#nav_div .navbar .nav>.active>a:hover, #nav_div .navbar .nav>.active>a:focus {
+  color: #fff;
+  text-decoration: none;
+  background:#004499
+}
+
+/*  */
+#nav_div .navbar .nav>li>a {
+  float: none;
+  padding: 10px 15px 10px;
+  color: #FFF;
+  text-shadow: 0 0 0;
+}
+
+/* dropdown */
+#nav_div {
+	 
+}
+
+#nav_div .dropdown-menu {
+  padding: 5px 0;
+  border: 0px solid #000;
+  margin-top: 0px;
+ 
+   background:#008FFC;
+  -webkit-border-radius: 0px 0px 4px 4px;
+  -moz-border-radius: 0px 0px 4px 4px;
+  border-radius:  0px 0px 4px 4px;
+
+}
+
+#nav_div .dropdown-menu>li>a {
+  padding: 7px 20px;
+  color: WHITE;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+#nav_div .navbar-nav>li>a:hover,#nav_div .dropdown-menu>li>a:hover,#nav_div .dropdown-menu>li>a:focus,#nav_div .dropdown-submenu:hover>a,#nav_div .dropdown-submenu:focus>a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  background: #004499;
+ 
+}
+
+/*  shows the dropdown on hover*/
+#nav_div .navbar ul.nav li:hover > ul.dropdown-menu {
+  display: block;
+   
+}
+
+
+/* before and after */
+#nav_div .navbar .nav > li > .dropdown-menu::before,
+#nav_div .navbar .nav > li > .dropdown-menu::after {
+  display: none;
+} 
+
+/* nav end*/
+
+
+
+/*grid start*/
+.ui-jqgrid {
+	border-top: none;
+}
+.ui-jqgrid-htable .ui-jqgrid-labels {
+	border:none;
+	padding:0;
+	background: none;
+}
+.ui-jqgrid-labels div {
+	padding:0;
+	background-color:#F29600;
+	color:white;
+}
+
+.ui-jqgrid td a {
+	color:#008FFC;
+	text-decoration: underline;
+}
+
+.ui-jqgrid td a:HOVER {
+	color:#008FFC;
+	text-decoration: underline;
+}
+
+
+.ui-jqgrid-labels th.ui-th-column{
+	padding:0;
+	border:none;
+}
+/*grid end*/
+
+
+.toolbar {
+	height:30px;
+	margin-right: 20px;
+}
+
+.form-inline td label {
+	margin-left: 10px;
+}
+
+.form-inline table {
+	width:100%;
+	
+}
+
+span.red {
+	color:red;
+}
+.breadcrumb {
+	margin: 2px 0;
+	padding: 4px;
+}

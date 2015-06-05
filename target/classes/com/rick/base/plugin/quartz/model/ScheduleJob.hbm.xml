@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<hibernate-mapping>
+	  
+<sql-query name="scheduleAllList">
+ 	<![CDATA[
+ 		select t.job_name,
+ 		t.job_group,
+ 		t.cron_expression,
+ 		t.method_name,
+ 		t.bean_class,
+ 		t.bean_id,
+ 		t.job_status,
+ 		t.id from quartz_schedule_job t
+    ]]>
+</sql-query>
+
+ <sql-query name="scheduleJobList">
+ 	<![CDATA[
+ 		SELECT T.ID,
+       T.JOB_NAME,
+       T.JOB_GROUP,
+       T.CRON_EXPRESSION,
+       T.JOB_STATUS AS JOB_STATUS_VALUE,
+       T.JOB_STATUS
+  from quartz_schedule_job t
+ 		
+    ]]>
+</sql-query>
+
+ <sql-query name="getScheduleJobById">
+ 	<![CDATA[
+ 	SELECT T.JOB_NAME,
+       T.JOB_GROUP,
+       T.CRON_EXPRESSION,
+       T.METHOD_NAME,
+       T.BEAN_CLASS,
+       T.BEAN_ID,
+       T.JOB_STATUS,
+       T.ID
+  from quartz_schedule_job t
+ where t.id = ?
+    ]]>
+</sql-query>
+
+ <sql-query name="changJobStatus">
+ 	<![CDATA[
+ 	  	update quartz_schedule_job t SET t.job_status = ? where t.id = ?
+    ]]>
+</sql-query>
+
+ <sql-query name="changJobCronExpress">
+ 	<![CDATA[
+ 	  	update quartz_schedule_job t SET t.cron_expression = ? where t.id = ?
+    ]]>
+</sql-query>
+</hibernate-mapping>

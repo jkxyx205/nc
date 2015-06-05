@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<hibernate-mapping>
+	  
+ <sql-query name="tree.document">
+ 	<![CDATA[
+  		SELECT t.id,t.pid as 'pId',t.title as name FROM nc_document t where t.file_type = '0' and t.doc_status = '1'
+    ]]>
+</sql-query>
+
+	<sql-query name="tree.document.init">
+	<!-- 默认展开第一层节点 -->
+ 	<![CDATA[
+  		SELECT t.id,t.pid as pId,t.title as name,case when id = 1 then 'true' else 'false' end as open 
+  		FROM nc_document t where t.file_type = '0'  and t.doc_status = '1'
+  		
+    ]]>
+</sql-query>
+
+ <sql-query name="tree.document.getfiles">
+ 	<![CDATA[
+  		select t.id,t.title,t.filePath,t.doc_type,t.doc_size,file_type,t.updateTime from nc_document t where pid = :pid  and t.doc_status = '1'
+  		ORDER BY t.file_type desc,t.title asc
+    ]]>
+</sql-query>
+
+ <sql-query name="tree.document.deleteById">
+ 	<![CDATA[
+  		update nc_document t set t.doc_status = '0' where t.id = ?
+    ]]>
+</sql-query>
+
+
+</hibernate-mapping>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<hibernate-mapping>
+ <sql-query name="notice.index">
+ 	<![CDATA[
+ 		select id,title,content,userId,notice_status,updateTime,publishTime FROM nc_notice 
+    ]]>
+</sql-query>
+</hibernate-mapping>

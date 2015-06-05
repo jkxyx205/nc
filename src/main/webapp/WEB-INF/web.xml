@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+   <!--加载spring的配置文件 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:system/applicationContext*.xml,classpath:business/applicationContext*.xml</param-value>
+	</context-param>
+
+  	<!-- <listener>  
+ 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
+  	</listener>    -->
+	
+   	<listener>
+		<listener-class>com.rick.base.context.SpringInit</listener-class>
+	</listener>
+ 
+	<context-param>
+	    <param-name>logbackConfigLocation</param-name>
+	    <param-value>classpath:system/logback.xml</param-value>
+	</context-param>
+	<listener>
+	    <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
+	</listener>
+<!-- <filter>
+	<filter-name>auth</filter-name>
+	<filter-class>com.rick.base.context.filter.auth.AuthFilter</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>auth</filter-name>
+	<url-pattern>*.jsp</url-pattern>
+	<dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+</filter-mapping>
+-->
+<filter> 
+             <filter-name>encodingFilter</filter-name>
+             <filter-class>
+                        org.springframework.web.filter.CharacterEncodingFilter
+             </filter-class>
+             <init-param>
+                        <param-name>encoding</param-name>
+                        <param-value>utf-8</param-value>
+             </init-param>
+  </filter>
+  <filter-mapping>
+             <filter-name>encodingFilter</filter-name>
+             <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+<filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
+        <init-param>
+		 	<param-name>configFile</param-name>
+  			<param-value>/WEB-INF/classes/system/sitemesh3.xml</param-value>
+		</init-param>
+</filter>
+<filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+        <!-- <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher> -->
+</filter-mapping>
+	<!--springMVC 框架加载服务 -->
+	<servlet>
+		<servlet-name>springMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:system/applicationContext-springmvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>springMVC</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>  
+        <servlet-name>DruidStatView</servlet-name>  
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>  
+    </servlet>  
+<servlet-mapping>  
+        <servlet-name>DruidStatView</servlet-name>  
+        <url-pattern>/druid/*</url-pattern>  
+    </servlet-mapping>  
+    
+	
+	<error-page>  
+        <error-code>403</error-code>  
+        <location>/WEB-INF/pages/error/403.jsp</location>  
+    </error-page>  
+    <error-page>  
+        <error-code>404</error-code>  
+        <location>/WEB-INF/pages/error/404.jsp</location>  
+    </error-page>  
+    <error-page>  
+        <error-code>405</error-code>  
+        <location>/WEB-INF/pages/error/405.jsp</location>  
+    </error-page>  
+    <error-page>  
+        <error-code>500</error-code>  
+        <location>/WEB-INF/pages/error/500.jsp</location>  
+    </error-page>
+</web-app>

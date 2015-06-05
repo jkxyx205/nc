@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dictionary-config>
+	<!--自定义字典，没有形成数据库字典-->
+	<custom>
+		<key>STATUS</key>
+		<description>XXXX</description>
+		<!-- 自定义的映射 -->
+		<map>
+	      	<entry key="ACTIVE">status.active</entry>
+	      	<entry key="CLOSED">status.closed</entry>
+        </map>
+		<column-pattern>flag</column-pattern>
+	</custom>
+	<custom>
+		<key>JOB_STATUS</key>
+		<description>XXXX</description>
+		<!-- 自定义的映射 -->
+		<map>
+	      	<entry key="0">暂停</entry>
+	      	<entry key="1">开启</entry>
+        </map>
+		<column-pattern>JOB_STATUS</column-pattern>
+	</custom>
+	
+	
+	<!--nc-->
+	<custom>
+		<key>sex</key>
+		<description>性别</description>
+		<map>
+	      	<entry key="0">男</entry>
+	      	<entry key="1">女</entry>
+        </map>
+		<column-pattern>sex</column-pattern>
+	</custom>
+	
+	<custom>
+		<key>status</key>
+		<description>性别</description>
+		<map>
+	      	<entry key="0">离职</entry>
+	      	<entry key="1">在职</entry>
+        </map>
+		<column-pattern>status</column-pattern>
+	</custom>
+	<custom>
+		<key>notice_status</key>
+		<description>性别</description>
+		<map>
+	      	<entry key="DRAFT">草稿中</entry>
+	      	<entry key="PUBLISHED">已发布</entry>
+        </map>
+		<column-pattern>noticeStatus</column-pattern>
+		<column-pattern>notice_status</column-pattern>
+	</custom>
+	
+</dictionary-config>
