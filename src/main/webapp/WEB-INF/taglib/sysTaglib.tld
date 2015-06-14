@@ -27,4 +27,42 @@
         	<name>multiple</name>
         </attribute>
     </tag>
+    
+    <tag>
+        <name>radio</name>
+        <tag-class>com.rick.base.context.tld.RadioTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+        <name>name</name>
+        	 <required>true</required>
+        </attribute>
+        <attribute>
+        	 <name>key</name>
+        	 <required>true</required>
+        </attribute>
+        <attribute>
+        	 <name>value</name>
+        	 <rtexprvalue>true</rtexprvalue>  
+        </attribute>
+    </tag>
+    
+    <tag>
+        <name>checkbox</name>
+        <tag-class>com.rick.base.context.tld.CheckBoxTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+        <name>name</name>
+        	 <required>true</required>
+        </attribute>
+        <attribute>
+        	 <name>key</name>
+        	 <required>true</required>
+        </attribute>
+        <attribute>
+        	 <name>value</name>
+        	 <rtexprvalue>true</rtexprvalue>  
+        </attribute>
+    </tag>
+    
+    
 </taglib>

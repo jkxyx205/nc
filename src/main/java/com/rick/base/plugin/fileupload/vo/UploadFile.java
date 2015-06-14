@@ -41,7 +41,6 @@ public class UploadFile {
 	public void setEmpty(boolean empty) {
 		this.empty = empty;
 	}
-	
 
 	public String getFilePath() {
 		return filePath;
@@ -51,7 +50,6 @@ public class UploadFile {
 		this.filePath = filePath;
 	}
 
-
 	public String getUpdateTime() {
 		return updateTime;
 	}
@@ -60,7 +58,6 @@ public class UploadFile {
 		this.updateTime = updateTime;
 	}
 
-	
 	public int getId() {
 		return id;
 	}
@@ -69,21 +66,44 @@ public class UploadFile {
 		this.id = id;
 	}
 
+	
+	public String getVisitUrl() {
+		return visitUrl;
+	}
+
+	public void setVisitUrl(String visitUrl) {
+		this.visitUrl = visitUrl;
+	}
+	
+	
+
+	public String getDownloadUrl() {
+		return downloadUrl;
+	}
+
+	public void setDownloadUrl(String downloadUrl) {
+		this.downloadUrl = downloadUrl;
+	}
 
 	private int id;
-	
+
 	private String name;
-	
+
 	private String originalFilename;
-	
+
 	private long size;
-	
+
 	private String contentType;
-	
+
 	private boolean empty;
-	
+
 	private String filePath;
-	
+
 	private String updateTime;
+
+	private String visitUrl;
+	
+	private String downloadUrl;
+	
 	
 }

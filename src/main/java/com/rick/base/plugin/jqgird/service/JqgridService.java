@@ -64,13 +64,13 @@ public class JqgridService {
 	@Resource
 	private BaseDaoImpl dao;
 	
-	public JqgridJsonBO getResponse(HttpServletRequest request) throws Exception {
+	public JqgridJsonBO getJqgirdData(HttpServletRequest request) throws Exception {
 		Map<String,Object> param = ServletContextUtil.getMap(true, request);
+		PageModel model = getPageModel(param);
+		return getJqgirdData(model,param);
 		
-		final PageModel model = getPageModel(param);
-		
-
-		
+	}
+	public JqgridJsonBO getJqgirdData(final PageModel model,Map<String,Object> param) throws Exception {
 		List<Map<String, Object>> rows = dao.queryForSpecificParam(model.queryName, param, new JdbcTemplateExecutor<List<Map<String, Object>>>() {
 
 			public List<Map<String, Object>> query(JdbcTemplate jdbcTemplate,
@@ -413,7 +413,7 @@ public class JqgridService {
 	
 	private String wrapSordString(String sql,String sidx, String sord) {
 		StringBuilder sb = new StringBuilder("SELECT * FROM (");
-		sb.append(sql).append(") _temp");
+		sb.append(sql).append(") temp");
 		if(StringUtils.isNotBlank(sidx) && StringUtils.isNotBlank(sord)) {
 			sb.append(" ORDER BY ").append(sidx).append(" ").append(sord);
 			return sb.toString();
@@ -422,7 +422,7 @@ public class JqgridService {
 		}
 	}
 	
-	private class PageModel {
+	public static class PageModel {
 		int page;
 		int rows;
 		String sidx;
@@ -430,6 +430,43 @@ public class JqgridService {
 		String queryName;
 		//一次女性全部加载出来,不在分页
 		String reloadAll;
+		public int getPage() {
+			return page;
+		}
+		public void setPage(int page) {
+			this.page = page;
+		}
+		public int getRows() {
+			return rows;
+		}
+		public void setRows(int rows) {
+			this.rows = rows;
+		}
+		public String getSidx() {
+			return sidx;
+		}
+		public void setSidx(String sidx) {
+			this.sidx = sidx;
+		}
+		public String getSord() {
+			return sord;
+		}
+		public void setSord(String sord) {
+			this.sord = sord;
+		}
+		public String getQueryName() {
+			return queryName;
+		}
+		public void setQueryName(String queryName) {
+			this.queryName = queryName;
+		}
+		public String getReloadAll() {
+			return reloadAll;
+		}
+		public void setReloadAll(String reloadAll) {
+			this.reloadAll = reloadAll;
+		}
+		
 	}
 	
 	private class HeadProperty {

@@ -20,6 +20,7 @@ public class CustomSimpleMappingExceptionResolver extends
 	protected ModelAndView doResolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex) {
 		logger.error(ex.getMessage());
+		ex.printStackTrace();
 		// Expose ModelAndView for chosen error view.
 		String viewName = determineViewName(ex, request);
 		if (viewName != null) {// JSP格式返回

@@ -19,9 +19,14 @@ public class MysqlSqlFormatter extends AbstractSqlFormatter{
 		}
 		
 		if (model != null)
-			sb.append(" limit ").append(model.getPage()-1).append(",").append(model.getRows());
+			sb.append(" limit ").append((model.getPage()-1) *  model.getRows()).append(",").append(model.getRows());
 		
 		return sb.toString();
+	}
+
+	@Override
+	public String conactString(String name) {
+		return " CONCAT('%',UPPER(:" + name + "),'%')";
 	}
 }
 

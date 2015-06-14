@@ -38,6 +38,9 @@ public class DicService {
 	@Value("${dicJsPath}")
 	private String jsPath;
 	
+	@Value("${dictonaryInit}")
+	private String dictonaryInit;
+	
 	private String getQuerySql(StringBuilder sql, Dictionary dic) {
 		boolean flag = false;
 		for(Dictionary.Item item :dic.getItemList()) {
@@ -64,7 +67,8 @@ public class DicService {
 	*/
 	@PostConstruct
 	public void initEnv() throws Exception  {
-		initEnv(Constants.realContextPath + xmlPath,Constants.realContextPath + jsPath);
+		if(Boolean.valueOf(dictonaryInit))
+			initEnv(Constants.realContextPath + xmlPath,Constants.realContextPath + jsPath);
 	}
 	
 	public void initEnv(String xmlPath,String jsPath) throws Exception  {

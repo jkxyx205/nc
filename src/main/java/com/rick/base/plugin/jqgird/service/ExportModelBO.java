@@ -12,6 +12,14 @@ class ExportModelBO {
 	
 	private String fileName;
 	
+	private String reloadAll;
+	
+	public String getReloadAll() {
+		return reloadAll;
+	}
+	public void setReloadAll(String reloadAll) {
+		this.reloadAll = reloadAll;
+	}
 	public String getFileName() {
 		return fileName;
 	}

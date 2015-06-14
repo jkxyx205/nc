@@ -414,6 +414,10 @@ public class BaseDaoImpl {
 					int paramLen = param.length;
 					
 					for(int i = 0 ; i < paramLen ;i++) {
+						/*if(param[i] instanceof Enum) { //枚举特殊处理
+							param[i] = param[i].toString();
+						}*/
+							
 						psst.setObject(i+1, param[i]);
 					}
 					

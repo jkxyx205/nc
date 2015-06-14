@@ -28,12 +28,10 @@ public class JqgridController {
 	@Resource
 	private BaseDaoImpl dao;
 	
-	
-	
 	@RequestMapping(value="/jqrid",method=RequestMethod.POST)
 	@ResponseBody
 	public JqgridJsonBO jqgridJsonData(HttpServletRequest request) throws Exception {
-		return service.getResponse(request);
+		return service.getJqgirdData(request);
 	}
 	
 	@RequestMapping(value="/jqrid/export",method=RequestMethod.POST)

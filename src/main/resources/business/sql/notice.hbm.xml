@@ -2,7 +2,22 @@
 <hibernate-mapping>
  <sql-query name="notice.index">
  	<![CDATA[
- 		select id,title,content,userId,notice_status,updateTime,publishTime FROM nc_notice 
+ 		select id,title,content,userId,notice_status,updateTime,publishTime FROM nc_notice where title like :title
     ]]>
 </sql-query>
+
+ <sql-query name="notice.deleteById">
+ 	<![CDATA[
+ 		DELETE FROM nc_notice where id = :id
+    ]]>
+</sql-query>
+
+<sql-query name="notice.list">
+ 	<![CDATA[
+ 		select id,title,content,userId,notice_status,updateTime,publishTime FROM nc_notice 
+ 		where title like :title and notice_status = 'PUBLISHED'
+    ]]>
+</sql-query>
+
+
 </hibernate-mapping>

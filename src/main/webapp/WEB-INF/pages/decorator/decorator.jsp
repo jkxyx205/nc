@@ -9,17 +9,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 pageContext.setAttribute("ctx", basePath);
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<%-- <base href="<%=basePath %>" >   --%>
 <title>
         <%-- <sitemesh:write property="title" />  --%>
         新航道内部管理系统
 </title>
+<link rel="Shortcut Icon" href="${ctx }resources/css/images/favicon.ico">
 <!-- 新 Bootstrap 核心 CSS 文件 -->
 <link rel="stylesheet" href="${ctx}resources/plugin/bootstrap/css/bootstrap.min.css">
 <!-- 可选的Bootstrap主题文件（一般不用引入） -->
@@ -42,6 +42,7 @@ pageContext.setAttribute("ctx", basePath);
 <link href="${ctx}resources/plugin/bootsrap_messenger/css/messenger-theme-future.css" rel="stylesheet" type="text/css" />
 
 <link rel="stylesheet" href="${ctx}resources/css/common/bootstrap_custom.css" media="screen">
+<script>var ctx='${ctx}';</script>
 <script type="text/javascript" src="${ctx}resources/js/common/jquery-1.11.0.min.js"></script>
 </head>
 <body>
@@ -60,8 +61,7 @@ pageContext.setAttribute("ctx", basePath);
 
 		</div>
  		<hr/> -->
-
-		<div id="nav_div" class="fixed-top">	
+		<div id="nav_div" >	
 			<nav class="navbar" style="border:0; width:920px; margin: 0 auto; ">
 			 <div style="padding-bottom: 5px;">
 		   	<img src="http://j.xhd.cn/r/cms/suzhou/default/index/img/logo1.png">
@@ -103,7 +103,7 @@ pageContext.setAttribute("ctx", basePath);
 		         <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">通知公告<span class="caret"></span></a>
 		          <ul class="dropdown-menu" >
-		            <li><a href="${ctx}teacher/list">公告列表</a></li>
+		            <li><a href="${ctx}notice/list/1">公告列表</a></li>
 		            <li><a href="${ctx}notice/gotoIndexPage">发布公告</a></li>
 		          </ul>
 		        </li>
@@ -130,9 +130,7 @@ pageContext.setAttribute("ctx", basePath);
 			</ol>
 		</nav>
 		</div>
- 		<div style="height:125px;">
-
-		</div>
+ 		<div id="nav_height"></div>
 		<sitemesh:write property='body' />
 </div>
 <script type="text/javascript" src="${ctx}resources/plugin/jquery-loadmask-0.4/jquery.loadmask.min.js"></script>
@@ -173,8 +171,42 @@ pageContext.setAttribute("ctx", basePath);
 <script type="text/javascript" src="${ctx}resources/plugin/bootsrap_messenger/js/messenger.js"></script> 
 <script type="text/javascript" src="${ctx}resources/plugin/bootsrap_messenger/js/messenger-theme-future.js"></script> 
 
+<script type="text/javascript" src="${ctx }resources/plugin/jquery.nicescroll/js/jquery.nicescroll.min.js"></script> 
+
 <script type="text/javascript" src="${ctx}resources/js/common/dictionary.js"></script>
 
 <script type="text/javascript" src="${ctx}resources/js/common/common.js"></script>
+<script>
+	$(function() {
+		$('input[placeholder]').placeholder();
+		$("form").validationEngine(); 
+		$("#w_container").unmask();
+		Messenger.options = {
+			    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-center',
+			    theme: 'future'
+		};
+		$(document).ajaxStart(function() {
+			$("#w_container").mask("Waiting...");
+		}).ajaxStop(function() {
+			$("#w_container").unmask();
+		});
+		
+		$(document).keydown(function(event) {
+            if (event.keyCode == "13") {
+          
+            	var activeElement = document.activeElement.tagName;
+            	if (!(activeElement === "INPUT" || activeElement === "SELECT")) {
+                	return;
+                }
+            	var searchBtn = $("[name=search]");
+            	if (searchBtn.length > 0) {
+            		searchBtn.click();
+                	event.preventDefault();
+            	}
+            	
+            }
+        });
+	});
+</script>
 </body>
 </html>

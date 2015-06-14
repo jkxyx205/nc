@@ -2,7 +2,6 @@ package com.rick.nc.baseinfo.teacher.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -84,13 +83,6 @@ public class Teacher {
 		this.tel = tel;
 	}
 
-	public String getTeachType() {
-		return teachType;
-	}
-
-	public void setTeachType(String teachType) {
-		this.teachType = teachType;
-	}
 
 	public Boolean getStatus() {
 		return status;
@@ -99,6 +91,81 @@ public class Teacher {
 	public void setStatus(Boolean status) {
 		this.status = status;
 	}
+	
+
+	public String getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(String personId) {
+		this.personId = personId;
+	}
+
+	public String getNation() {
+		return nation;
+	}
+
+	public void setNation(String nation) {
+		this.nation = nation;
+	}
+
+	public String getHometown() {
+		return hometown;
+	}
+
+	public void setHometown(String hometown) {
+		this.hometown = hometown;
+	}
+
+	public String getSchool() {
+		return school;
+	}
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
+	public String getEducationDate() {
+		return educationDate;
+	}
+
+	public void setEducationDate(String educationDate) {
+		this.educationDate = educationDate;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getWorkType() {
+		return workType;
+	}
+
+	public void setWorkType(String workType) {
+		this.workType = workType;
+	}
+
+	public String getJobType() {
+		return jobType;
+	}
+
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
+	}
+
+	public String getHeadFilePath() {
+		return headFilePath;
+	}
+
+	public void setHeadFilePath(String headFilePath) {
+		this.headFilePath = headFilePath;
+	}
+
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)  
@@ -120,9 +187,24 @@ public class Teacher {
 	
 	private String tel;
 	
-	@Column(name = "teach_type")
-	private String teachType;
+	private String personId;
+	
+	private String nation;
+	
+	private String hometown;
+	
+	private String school;
+	
+	private String educationDate;
+	
+	private String address;
+	
+	private String workType;
 	
 	private Boolean status;
+	
+	private String jobType;
+	
+	private String headFilePath;
 
 }

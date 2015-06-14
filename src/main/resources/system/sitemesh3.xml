@@ -6,6 +6,6 @@
     
      <!-- 指明满足"/exclude.jsp*"的页面，将被排除，不被装饰 -->
      <mapping path="/teacher/gotoEdit/*" exclude="true" />
-<!--      <mapping path="/doc/index" exclude="true" /> -->
-<!--      <mapping path="/WEB-INF/pages/document/layout.jsp" exclude="true" /> -->
+     <mapping path="/ckeditor/uploadImg" exclude="true" />
+     <mapping path="/notice/gotoDetail/*" exclude="true" />
 </sitemesh>

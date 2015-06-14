@@ -16,16 +16,16 @@ import com.rick.nc.doc.service.DocumentService;
 @Controller
 @RequestMapping("/doc")
 public class DocmentController {
-	
+
 	@Resource
 	private DocumentService docService;
-	
+
 	@RequestMapping("/index")
 	public String gotoIndex() {
 		return "/document/index";
 	}
-	
-	@RequestMapping(value={"/addDoc"},method=RequestMethod.POST)
+
+	@RequestMapping(value = { "/addDoc" }, method = RequestMethod.POST)
 	@ResponseBody
 	public String addDocument(Document doc) {
 		doc.setUpdateBy("admin");
@@ -34,22 +34,19 @@ public class DocmentController {
 		docService.addDocument(doc);
 		return String.valueOf(doc.getId());
 	}
-	
-	@RequestMapping(value={"/renameDoc"},method=RequestMethod.POST)
+
+	@RequestMapping(value = { "/renameDoc" }, method = RequestMethod.POST)
 	@ResponseBody
 	public String renameDocument(Document doc) {
 		docService.updateDocument(doc);
 		return "success";
 	}
-	
-	@RequestMapping(value={"/delDoc/{id}"},method=RequestMethod.POST)
+
+	@RequestMapping(value = { "/delDoc/{id}" }, method = RequestMethod.POST)
 	@ResponseBody
 	public String delDoc(@PathVariable int id) {
 		docService.delDocumentById(id);
 		return "success";
 	}
-	
-	
-	
-	
+
 }

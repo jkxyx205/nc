@@ -91,7 +91,7 @@ public abstract class AbstractSqlFormatter {
 					}
 					
 				} else if("like".equalsIgnoreCase(h.oper)) {
-		        	 srcSql = srcSql.replace(h.full, new StringBuilder("UPPER(").append(h.key).append(") ").append(h.oper).append(" '%'||UPPER(:").append(name).append(")||'%'"));
+		        	 srcSql = srcSql.replace(h.full, new StringBuilder("UPPER(").append(h.key).append(") ").append(h.oper).append(conactString(name)));
 		        	 formatMap.put(name, value);
 				} else if(("<>=<=".indexOf(h.oper) > -1|| h.oper.equals("!=")) && StringUtils.isNotBlank(format = matchDate(value))) {
 					try {
@@ -113,7 +113,7 @@ public abstract class AbstractSqlFormatter {
 		//TODO ORDER BY t.file_type desc,t.title asc 不适用
 		srcSql = srcSql.replaceAll("(?i)(order\\s+by\\s+(\\S+)\\s+(desc|asc))?","");
 		StringBuilder sb = new  StringBuilder();
-		sb.append("SELECT COUNT(*) FROM (").append(srcSql).append(") _temp");
+		sb.append("SELECT COUNT(*) FROM (").append(srcSql).append(") temp");
 		return sb.toString();
 	}
 	
@@ -162,7 +162,7 @@ public abstract class AbstractSqlFormatter {
 			 
 			 paramList.add(holder);
 		}
-		logger.debug(paramList.toString());
+//		logger.debug(paramList.toString());
 		return paramList;
 	}
 	
@@ -182,5 +182,7 @@ public abstract class AbstractSqlFormatter {
 	}
    
    public abstract String pageSql(String sql, PageSortModel model);
+   
+   public abstract String conactString(String name);
    
 }

@@ -7,7 +7,6 @@ public interface DocumentService {
 	
 	public static final String FILE_FOLDER = "0";
 	
-	
 	public void addDocument(Document doc);
 	
 	public void updateDocument(Document doc);

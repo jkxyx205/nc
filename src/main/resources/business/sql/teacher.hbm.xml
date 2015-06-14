@@ -2,18 +2,15 @@
 <hibernate-mapping>
  <sql-query name="teacher.list">
  	<![CDATA[
- 		 SELECT id,
-				number,
+ 			 SELECT id,
 				name,
-				birthday,
 				sex,
-				region,
-				education,
 				email,
 				tel,
-				teach_type,
-				status
-			FROM nc_teacher WHERE name = :name and sex in (:sex)
+				jobType,
+				workWay,
+				education
+			FROM nc_teacher  WHERE status = '1' AND name = :name
     ]]>
 </sql-query>
 

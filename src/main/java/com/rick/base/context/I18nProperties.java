@@ -58,6 +58,8 @@ public final class I18nProperties {
 	
 	@PostConstruct
 	public void excel2Properties() throws Exception {
+		if(!Boolean.valueOf(startCreateNew))
+			return;
 		excelTemplate = Constants.realContextPath + excelTemplate;
 		jsFile = Constants.realContextPath + jsFile;
 		propertiesFolder = Constants.realContextPath + propertiesFolder;
@@ -204,7 +206,10 @@ public final class I18nProperties {
 			Entry<String, String> e = value.next();
 			properties.setProperty(e.getKey(), e.getValue());
 		}
-		properties.store(new FileOutputStream(file),"i18n properties create by I18nExcel2Properties");
+		
+		FileOutputStream fos = new FileOutputStream(file);
+		properties.store(fos,"i18n properties create by I18nExcel2Properties");
+		fos.close();
 		
 		//创建默认message
 		if("en".equals(langType)) {

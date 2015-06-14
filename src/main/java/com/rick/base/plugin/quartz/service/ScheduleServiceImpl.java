@@ -19,6 +19,7 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,11 +38,16 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Resource	
 	private BaseDaoImpl dao;
 	
+	@Value("${quartzInit}")
+	private String quartzInit;
+	
 	@Resource
 	private SchedulerFactoryBean schedulerFactoryBean;
 	
 	@PostConstruct
 	public void init() throws SchedulerException {
+		if(!Boolean.valueOf(quartzInit))
+			return;
 		List<ScheduleJob> list = getAllJobs();
 		for(ScheduleJob scheduleJob : list) {
 			addJob(scheduleJob);

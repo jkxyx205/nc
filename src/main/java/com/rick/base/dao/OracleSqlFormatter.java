@@ -34,4 +34,9 @@ public class OracleSqlFormatter extends AbstractSqlFormatter {
 		sb.append(") A WHERE ROWNUM <=").append(endIndex).append(") WHERE RN > ").append(startIndex);
 		return sb.toString();
 	}
+
+	@Override
+	public String conactString(String name) {
+		 return "'%'||UPPER(:" + name + ")||'%'";
+	}
 }

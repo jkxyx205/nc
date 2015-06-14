@@ -88,8 +88,6 @@ pageContext.setAttribute("ctx", basePath);
 <script type="text/javascript" src="${ctx}resources/plugin/jquery-layout/js/jquery-ui.js"></script> 
 <script type="text/javascript" src="${ctx }resources/plugin/jQuery-File-Upload/js/jquery.fileupload.js"></script>
  
-<script type="text/javascript" src="${ctx }resources/plugin/jquery.nicescroll/js/jquery.nicescroll.min.js"></script> 
-
 <script type="text/javascript" src="${ctx }resources/plugin/jquery-fancybox/source/jquery.fancybox.pack.js"></script>	
 <script type="text/javascript" src="${ctx }resources/plugin/jquery-fancybox/source/helpers/jquery.fancybox-thumbs.js"></script>	
 
@@ -126,7 +124,6 @@ pageContext.setAttribute("ctx", basePath);
 	        	 onClick:function(event,treeId,treeNode) {
 	        		 id = treeNode.id;
 	        		 setLabel(id);
-	        		 upload(id);
 	        		 search(id);
 	        	 },beforeRename :function(reeId, treeNode, newName, isCancel) {
 	        		 renameNode(treeNode,newName);
@@ -188,7 +185,8 @@ pageContext.setAttribute("ctx", basePath);
  	            			'doc_type':file.contentType,
  	            			'file_type':'1',
  	            			'doc_size':file.size,
- 	            			'updateTime':file.updateTime
+ 	            			'updateTime':file.updateTime,
+ 	            			'filePath':file.filePath
  	            			
  	            	};
  	       	
@@ -219,13 +217,13 @@ pageContext.setAttribute("ctx", basePath);
  			colModel:[
  		             {name:'id',index:'id',hidden:true},
  		             {name:'title',index:'title', width:200,searchoptions:{sopt:['cn']},formatter:function(cellvalue, options, rowObject) {
- 		            	var title =  "<img src=\"${ctx}resources/css/images/"+getImage(rowObject.file_type,rowObject.title)+"\"/>&nbsp;<span style='cursor:pointer;' ondblclick=\"operator("+rowObject.id+","+rowObject.file_type+");\">"+cellvalue+"</span>";
+ 		            	var title =  "<img src=\"${ctx}resources/css/images/"+common.getImage(rowObject.file_type,rowObject.title)+"\"/>&nbsp;<span style='cursor:pointer;' ondblclick=\"operator("+rowObject.id+","+rowObject.file_type+");\">"+cellvalue+"</span>";
  		            	
  		            	if(rowObject.file_type == "1") {
  		            		title += "<img style='float:right; cursor:pointer' onclick=\"deleteFile('"+rowObject.id+"')\" src='${ctx}resources/css/images/remove.jpg'/>";
  		            		
  		            		if(rowObject.doc_type.indexOf("image") == 0) {
- 	 		            		title += '<a style="float:right; cursor:pointer" class="fancybox-thumbs" data-fancybox-group="thumb" href="${ctx}'+rowObject.filePath+'"><img src="${ctx}/resources/css/images/preview.png"/></a>';
+ 	 		            		title += '<a style="float:right; cursor:pointer" class="fancybox-thumbs" data-fancybox-group="thumb" href="${ctx}/download/src?filePath='+rowObject.filePath+'"><img src="${ctx}/resources/css/images/preview.png"/></a>';
  	 		            	}
  		            	}
  		            	
@@ -239,7 +237,7 @@ pageContext.setAttribute("ctx", basePath);
  		             {name:'doc_size',index:'doc_size',sorttype:'int', width:50,search:false,formatter:function(cellvalue, options, rowObject) {
  		            	 if(!cellvalue)
  		            		return "";
- 		            	 return parseInt(cellvalue/1024) + "KB";
+ 		            	 return common.getFileSize(cellvalue);
  		             }}, 
  		             {name:'file_type',index:'file_type',hidden:true} 
  		     ], 
@@ -282,34 +280,6 @@ pageContext.setAttribute("ctx", basePath);
 		});
  		
 	});
-	
-	function getImage(type,title) {
-		if(type=="0") {
-			return "folder.jpg";
-		} else {
-			if(endWith(title,"xls") || endWith(title,"xlsx"))
-				return "excel.png";
-			if(endWith(title,"doc") || endWith(title,"docx"))
-				return "word.png";
-			if(endWith(title,"jpg") || endWith(title,"png")|| endWith(title,"bmp")|| endWith(title,"jpeg")|| endWith(title,"gif"))
-				return "image.png";
-			if(endWith(title,"mp3") || endWith(title,"wma"))
-				return "mp3.png";
-			if(endWith(title,"rar") || endWith(title,"zip") || endWith(title,"jar") || endWith(title,"tar"))
-				return "rar.png";
-			if(endWith(title,"txt"))
-				return "txt.png";
-			if(endWith(title,"avi")||endWith(title,"mp4") ||endWith(title,"rmvb"))
-				return "vedio.png";
-		}
-		
-		return "else.png";
-		
-		function endWith(title,ext){     
-			  var reg=new RegExp(ext+"$","i");     
-			  return reg.test(title);        
-		};
-	}
 	
 	function upload(pid) {
 		//动态改变参数
@@ -360,6 +330,9 @@ pageContext.setAttribute("ctx", basePath);
 		 $("#titleBar").html(path);
 		 
 		 $(".ui-search-toolbar").hide();
+		 
+		 //treeObject.selectNode(treeNode);
+		 upload(id);
 	}
 	
 	function donwload(id) {

@@ -15,7 +15,10 @@ public final class Constants {
 	
 	public static final SimpleDateFormat SDF_TIME = new SimpleDateFormat(DATETIME_FORMAT);
 	
+	
 	public static String realContextPath;
+	
+	public static String contextPath;
 	
 	public static File tempDir;
 }

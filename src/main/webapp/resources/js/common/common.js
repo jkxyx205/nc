@@ -1,22 +1,3 @@
-$(function(){
-		$('input[placeholder]').placeholder();
-		$("form").validationEngine(); 
- 
-		$("#w_container").unmask();
-		
-		$(document).ajaxStart(function() {
-			$("#w_container").mask("Waiting...");
-		}).ajaxStop(function() {
-			$("#w_container").unmask();
-		});
-		
-		Messenger.options = {
-			    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-center',
-			    theme: 'future'
-		};
-});
-
-
 var common = function() {
 	function colNamesI18n(colNames) {
 		//i18n
@@ -284,10 +265,42 @@ var common = function() {
 					
 					$(".breadcrumb").append($li);
 				}
-				
+			}, getImage:function(type,title) {
+				if(type=="0") {
+     	   			return "folder.jpg";
+     	   		} else {
+     	   			if(endWith(title,"xls") || endWith(title,"xlsx"))
+     	   				return "excel.png";
+     	   			if(endWith(title,"doc") || endWith(title,"docx"))
+     	   				return "word.png";
+     	   			if(endWith(title,"jpg") || endWith(title,"png")|| endWith(title,"bmp")|| endWith(title,"jpeg")|| endWith(title,"gif"))
+     	   				return "image.png";
+     	   			if(endWith(title,"mp3") || endWith(title,"wma"))
+     	   				return "mp3.png";
+     	   			if(endWith(title,"rar") || endWith(title,"zip") || endWith(title,"jar") || endWith(title,"tar"))
+     	   				return "rar.png";
+     	   			if(endWith(title,"txt"))
+     	   				return "txt.png";
+     	   			if(endWith(title,"pdf"))
+     	   				return "pdf.png";
+     	   			if(endWith(title,"avi")||endWith(title,"mp4") ||endWith(title,"rmvb"))
+     	   				return "vedio.png";
+     	   		}
+     	   		
+     	   		return "else.png";
+     	   		
+     	   		function endWith(title,ext){     
+     	   			  var reg=new RegExp(ext+"$","i");     
+     	   			  return reg.test(title);        
+     	   		};
+			}, getFileSize :function(size) {
+				if(size >  1024 *1024) {
+					return (size/(1024 *1024)).toFixed(2) + "M";
+				} else {
+					return (size/1024).toFixed(2) + "K";
+				}
 				
 			}
-			
 	};
 }(); 
 

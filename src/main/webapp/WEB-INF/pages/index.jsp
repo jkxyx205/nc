@@ -10,7 +10,7 @@ pageContext.setAttribute("ctx", basePath);
 <head>
 </head>
 <body>
-
+<link rel="stylesheet" href="${ctx}resources/plugin/jquery-top/jquery.top.css">
 	<div id="content">
 	
 		<h1>Infinite Scroll Testing</h1>
@@ -32,7 +32,6 @@ pageContext.setAttribute("ctx", basePath);
 		<p>Top Cat! The most effectual Top Cat! Who's intellectual close friends get to call him T.C., providing it's with dignity. Top Cat! The indisputable leader of the gang. He's the boss, he's a pip, he's the championship. He's the most tip top, Top Cat.</p>
 
 		<p>Hong Kong Phooey, number one super guy. Hong Kong Phooey, quicker than the human eye. He's got style, a groovy style, and a car that just won't stop. When the going gets tough, he's really rough, with a Hong Kong Phooey chop (Hi-Ya!). Hong Kong Phooey, number one super guy. Hong Kong Phooey, quicker than the human eye. Hong Kong Phooey, he's fan-riffic!</p>
-		
 	</div>
 	
 	<a id="next" href="#">next page?</a>
@@ -40,9 +39,15 @@ pageContext.setAttribute("ctx", basePath);
  
  
 <script type="text/javascript" src="${ctx }resources/plugin/infinite-scroll/jquery.infinitescroll.min.js"></script>
+<script type="text/javascript" src="${ctx}resources/plugin/jquery-top/jquery.top.js"></script>
+
 <script>
 	$(function() {
+		$.top({top:window.screen.availHeight-200});
 		common.breadcrumb([{"text":"首页"}]);
+		
+		$("#nav_height").css("height","125px");
+		$("#nav_div").addClass("fixed-top");
 	});
 	
 	$('#content').infinitescroll({

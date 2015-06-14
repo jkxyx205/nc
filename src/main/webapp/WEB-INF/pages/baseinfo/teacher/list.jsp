@@ -3,7 +3,6 @@
 <%@ taglib uri="http://rick.xu.com/selecttag" prefix="r" %>  
 <html>
 <head>
-<title>教师信息</title>
 </head>
 <body>
 <div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -19,17 +18,16 @@
     </div>
   </div>
 </div>
-<br/>
 <form id="queryTeacher" class="form-horizontal" method="post">
     <div class="form-group">
 	 		<label class="col-sm-1 control-label">姓名<span class="red">*</span></label>
             <div class="col-sm-3">
               <input type="text" class="form-control" name="name" placeholder="姓名" />
             </div>
-            <label class="col-sm-1 control-label">性别</label>
-            <div class="col-sm-3">
-				    <r:select name="sex" key="sex" multiple="true"/>
-            </div>
+<!--             <label class="col-sm-1 control-label">性别</label> -->
+<!--             <div class="col-sm-3"> -->
+<%-- 				    <r:select name="sex" key="sex" multiple="true"/> --%>
+<!--             </div> -->
             
             <div class="col-sm-2">
 				    <button name="search" type="button" class="btn btn-primary btn-sm">查询</button>
@@ -64,24 +62,22 @@ $(function() {
 		queryName:"teacher.list",
 		fileName:"teacherInfo",
 		//data:{"name":"Rick.Xu"},
-		colNames:['id','number','name','birthday','sex','education','tel','teach_type','status','email','operator'], 
+		colNames:['id','name','sex','education','tel','email','jobType','workWay','operator'], 
 		colModel:[
 	             {name:'id',index:'id', width:60,hidden:true},
-	             {name:'number',index:'number', width:100},
 	             {name:'name',index:'name', width:100}, 
-	             {name:'birthday',index:'birthday', width:100}, 
-	             {name:'sex',index:'sex', width:100}, 
+	             {name:'sex',index:'sex', width:100,align:'center'}, 
 	             {name:'education',index:'education', width:100}, 
 	             {name:'tel',index:'tel', width:100}, 
-	             {name:'teach_type',index:'teach_type', width:100}, 
-	             {name:'status',index:'status', width:100}, 
-	             {name:'email',index:'email', width:100}, 
-	             {name:'operator',index:'operator', width:80,exp:false,formatter:function(cellvalue, options, rowObject) {
+	             {name:'email',index:'email', width:150}, 
+	             {name:'jobType',index:'jobType', width:100,align:'center'}, 
+	             {name:'workWay',index:'workWay', width:100}, 
+	             {name:'operator',index:'operator', width:80,exp:false,align:'center',formatter:function(cellvalue, options, rowObject) {
 	            	 return "<a href='javascript:void(0)' onclick='gotoEdit("+rowObject.id+");'>编辑</a>&nbsp;<a href='javascript:void(0)' onclick='del("+rowObject.id+");'>删除</a>";
 	             }} 
 	     ], 
-	     sortname:"number",
-	     sortorder:'asc',
+/* 	     sortname:"number",
+	     sortorder:'asc', */
 	     queryForm:"#queryTeacher" //optional
 	});
 	
@@ -142,4 +138,3 @@ function gotoAdd() {
 </script>
 </body>
 </html>
-

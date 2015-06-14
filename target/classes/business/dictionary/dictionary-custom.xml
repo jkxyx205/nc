@@ -2,16 +2,6 @@
 <dictionary-config>
 	<!--自定义字典，没有形成数据库字典-->
 	<custom>
-		<key>STATUS</key>
-		<description>XXXX</description>
-		<!-- 自定义的映射 -->
-		<map>
-	      	<entry key="ACTIVE">status.active</entry>
-	      	<entry key="CLOSED">status.closed</entry>
-        </map>
-		<column-pattern>flag</column-pattern>
-	</custom>
-	<custom>
 		<key>JOB_STATUS</key>
 		<description>XXXX</description>
 		<!-- 自定义的映射 -->
@@ -36,7 +26,7 @@
 	
 	<custom>
 		<key>status</key>
-		<description>性别</description>
+		<description>教师状态</description>
 		<map>
 	      	<entry key="0">离职</entry>
 	      	<entry key="1">在职</entry>
@@ -53,5 +43,62 @@
 		<column-pattern>noticeStatus</column-pattern>
 		<column-pattern>notice_status</column-pattern>
 	</custom>
+	<custom>
+		<key>nation</key>
+		<description>民族</description>
+		<map>
+	      	<entry key="0">汉族</entry>
+	      	<entry key="1">其他民族</entry>
+        </map>
+		<column-pattern>nation</column-pattern>
+	</custom>
+	<custom>
+		<key>education</key>
+		<description>学历</description>
+		<map>
+	      	<entry key="0">博士</entry>
+	      	<entry key="1">硕士</entry>
+	      	<entry key="2">本科</entry>
+	      	<entry key="3">专科</entry>
+	      	<entry key="4">其他</entry>
+        </map>
+		<column-pattern>education</column-pattern>
+	</custom>
+	<custom>
+		<key>jobType</key>
+		<description></description>
+		<map>
+	      	<entry key="0">专职</entry>
+	      	<entry key="1">兼职</entry>
+        </map>
+		<column-pattern>jobType</column-pattern>
+	</custom>
+	<custom>
+		<key>workWay</key>
+		<description></description>
+		<map>
+	      	<entry key="0">授课教师</entry>
+	      	<entry key="1">助教</entry>
+        </map>
+		<column-pattern>workWay</column-pattern>
+	</custom>
+	<custom>
+		<key>course</key>
+		<description>课程</description>
+		<map>
+	      	<entry key="0">雅思强化</entry>
+	      	<entry key="1">雅思冲刺</entry>
+	      	<entry key="3">托福强化</entry>
+	      	<entry key="4">托福冲刺</entry>
+	      	<entry key="5">ACT强化</entry>
+	      	<entry key="6">ACT冲刺</entry>
+	      	<entry key="7">SAT强化</entry>
+	      	<entry key="8">SAT冲刺</entry>
+	      	<entry key="9">AP强化</entry>
+	      	<entry key="10">AP冲刺</entry>
+        </map>
+		<column-pattern>workWay</column-pattern>
+	</custom>
+	
 	
 </dictionary-config>

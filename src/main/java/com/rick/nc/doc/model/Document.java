@@ -84,17 +84,6 @@ public class Document {
 		this.filePath = filePath;
 	}
 
-	
-	public String getRealPath() {
-		return realPath;
-	}
-
-	public void setRealPath(String realPath) {
-		this.realPath = realPath;
-	}
-
-	
-
 	public String getStatus() {
 		return status;
 	}
@@ -127,9 +116,6 @@ public class Document {
 	private Date updateTime;
 	
 	private String updateBy;
-	
-	@Transient
-	private String realPath;
 	
 	@Column(name="doc_status")
 	private String status = "1";

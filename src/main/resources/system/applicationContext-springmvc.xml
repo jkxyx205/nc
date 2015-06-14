@@ -77,6 +77,7 @@
 	<mvc:resources location="/resources/WEB-INF/uploadfiles/" mapping="/uploadfiles/**" />
 	<mvc:resources location="/resources/plugin/" mapping="/resources/plugin/**" />
 	<mvc:resources location="/resources/upload/" mapping="/resources/upload/**" />
+	<mvc:resources location="/resources/head/" mapping="/resources/head/**" />
 	<mvc:resources location="/WEB-INF/pages/decorator/" mapping="/WEB-INF/pages/decorator/**" />
  
 	<bean

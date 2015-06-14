@@ -12,12 +12,12 @@ import javax.persistence.Id;
 public class Notice {
 	
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -62,12 +62,12 @@ public class Notice {
 	}
 
 
-	public Status getNoticeStatus() {
+	public String getNoticeStatus() {
 		return noticeStatus;
 	}
 
 
-	public void setNoticeStatus(Status noticeStatus) {
+	public void setNoticeStatus(String noticeStatus) {
 		this.noticeStatus = noticeStatus;
 	}
 	
@@ -83,12 +83,27 @@ public class Notice {
 	}
 
 
+	
+
+	public String getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)  
-	private int id;
+	private Integer id;
 	
 	private String title;
+	
+	private String userId;
 	
 	private String content;
 	
@@ -99,7 +114,7 @@ public class Notice {
 	private Date publishTime;
 	
 	@Column(name="notice_status")
-	private Status noticeStatus;
+	private String noticeStatus;
 	
 	
 	public enum Status {

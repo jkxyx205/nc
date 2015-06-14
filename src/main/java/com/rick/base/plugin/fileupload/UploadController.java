@@ -1,20 +1,15 @@
 package com.rick.base.plugin.fileupload;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +24,9 @@ import com.rick.nc.doc.service.DocumentService;
 
 @Controller
 @RequestMapping("/upload")
-public class UploadController {
+public class UploadController{
+	@Resource
+	private Upload2Disk ud;
 	
 	@Resource
 	private DocumentService docService;
@@ -38,6 +35,7 @@ public class UploadController {
 	@ResponseBody
 	public List<UploadFile> uploadFile(HttpServletRequest request,     
             HttpServletResponse response) {
+		
 		 
 		 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;   
 		 int pid = Integer.parseInt(multipartRequest.getParameter("pid"));
@@ -48,7 +46,7 @@ public class UploadController {
 		 
 		try {
 			for (MultipartFile file : files) {
-				UploadFile uf = store(file);
+				UploadFile uf = ud.store(file);
 				
 				Document doc = save2Db(pid,file,uf.getFilePath());
 				uf.setId(doc.getId());
@@ -63,34 +61,7 @@ public class UploadController {
 
 		 return retList;
 	}
-	
-	private UploadFile store(MultipartFile file) throws FileNotFoundException, IOException {
-		String fileStoreName = UUID.randomUUID().toString() + getFileExtend(file.getOriginalFilename());
-		 
-		Calendar now = Calendar.getInstance();  
-				 
-		String uploadPath =  "resources" + File.separator + "upload" + File.separator + now.get(Calendar.YEAR) + File.separator + (now.get(Calendar.MONTH) + 1) ;
-		String folder = Constants.realContextPath + File.separator + uploadPath;
-		
-		 File ff = new File(folder);
-		 if(!ff.exists()) {
-			 ff.mkdirs();
-		 }
-		 
-		 
-		 IOUtils.write(file.getBytes(), new FileOutputStream(new File(ff,fileStoreName)));
-		 
-		 UploadFile f = new UploadFile();
-		 
-		 f.setContentType(file.getContentType());
-		 f.setEmpty(file.isEmpty());
-		 f.setName(file.getOriginalFilename());
-		 f.setOriginalFilename(file.getOriginalFilename());
-		 f.setSize(file.getSize());
-		 f.setFilePath(uploadPath+ File.separator + fileStoreName);
-		 return f;
-		
-	}
+
 	
 	private Document save2Db(int pid,MultipartFile file,String filePath) {
 		Document doc = new Document();
@@ -104,14 +75,5 @@ public class UploadController {
 		doc.setUpdateTime(new Date());
 		docService.addDocument(doc);
 		return doc;
-	}
-
-	private String getFileExtend(String originalFilename) {
-		int num =  originalFilename.lastIndexOf(".");
-		
-		if (num == -1)
-			return "";
-		
-		return originalFilename.substring(num);
 	}
 }
