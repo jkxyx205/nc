@@ -8,4 +8,9 @@
      <mapping path="/teacher/gotoEdit/*" exclude="true" />
      <mapping path="/ckeditor/uploadImg" exclude="true" />
      <mapping path="/notice/gotoDetail/*" exclude="true" />
+     
+     <!--测试 -->
+     <mapping path="/test/*" exclude="true" />
+     <mapping path="/login.jsp" exclude="true" />
+     
 </sitemesh>

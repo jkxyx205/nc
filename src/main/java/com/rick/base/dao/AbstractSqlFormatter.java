@@ -1,16 +1,23 @@
 package com.rick.base.dao;
 
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +36,7 @@ public abstract class AbstractSqlFormatter {
 	
 	private static final String OPER_REGEX = "(?i)(like|!=|>=|<=|<|>|=|\\s+in|\\s+not\\s+in)";
 	//private static final String HOLDER_REGEX = "[(\\s*]?:\\w+[\\s*)]?";
-	private static final String HOLDER_REGEX = "(([(\\s*]:\\w+[\\s*)])|(:\\w+))";
+	private static final String HOLDER_REGEX = "(([(]\\s*:\\w+\\s*[)])|(:\\w+))";
 	
 	public static final String PARAM_REGEX = ":\\w+";
 	private static final String FULL_REGEX = new StringBuilder().append(COLUNM_REGEX).append("\\s*").append(OPER_REGEX).append("\\s*").append(HOLDER_REGEX).toString();
@@ -42,9 +49,42 @@ public abstract class AbstractSqlFormatter {
 		DATE_FORMAT_MAP.put("\\d{4}-\\d{2}-\\d{2}", "yyyy-MM-dd");
 	}
 	
+	private String velocityTemplate(String srcSql,Map<String,Object> param) {
+		if (MapUtils.isEmpty(param)) {
+			return srcSql;
+		}
+		
+		VelocityEngine velocityEngine = new VelocityEngine();
+	    VelocityContext context=new VelocityContext();
+	    
+	    for (Entry<String, Object> en : param.entrySet()) {
+	    	context.put(en.getKey(), en.getValue());
+	    }
+	    
+	    StringWriter sw = new StringWriter();
+	   
+	    velocityEngine.evaluate(context, sw, "", srcSql);
+	    
+	    return sw.toString();
+	}
+	
+	/**
+	 * 避免一个参数是另外一个参数的子串
+	 * 比如 :pogName 和 :pogNameLong
+	 * @param srcSql
+	 * @param param
+	 * @param formatMap
+	 * @param paramInSeperator
+	 * @return
+	 */
 	String formatSql(String srcSql,Map<String,Object> param,Map<String, Object> formatMap,String paramInSeperator) {
+		//使用模板
+		srcSql = velocityTemplate(srcSql, param);
+		
 		if(formatMap == null || param == null) {
-			return srcSql.replaceAll(" " + FULL_REGEX, " 1 = 1");
+			srcSql = srcSql.replaceAll(" " + FULL_REGEX, " 1 = 1");
+			formatMap = Collections.emptyMap();
+			param = Collections.emptyMap();
 		} else {
 			List<ParamHolder> paramList = splitParam(srcSql);
 			
@@ -98,25 +138,54 @@ public abstract class AbstractSqlFormatter {
 						if(!formatMap.containsKey(name))
 							formatMap.put(name, new SimpleDateFormat(format).parse(value));
 					} catch (ParseException e) {
-						 logger.debug(e.getMessage());
+						 logger.error(e.getMessage());
 					}
 				} else {
 					formatMap.put(name, value);
 				}
 				
 			}
+			
+			//解决不规则的参数匹配
+			Set<String> paramListLeft = splitSingleParam(srcSql);
+			for (String p : paramListLeft) {
+				String pp = p.substring(1);
+				Object v = formatMap.get(pp) ;
+				if (v == null) {
+					v = param.get(pp);
+					if (v == null) {
+						srcSql = srcSql.replaceAll(p, "''");	
+					} else {
+						formatMap.put(pp, v);
+					}
+				}
+			}
+			
 		}
 		return srcSql;
 	}
 	
+	private static Set<String> splitSingleParam(String sql) {
+		Pattern pat = Pattern.compile(PARAM_REGEX);  
+		Matcher mat = pat.matcher(sql);  
+		Set<String> paramList = new HashSet<String>();
+		
+		while (mat.find()) {
+			 String matchRet = mat.group().trim();
+			 paramList.add(matchRet);
+		}
+//		logger.debug(paramList.toString());
+		return paramList;
+	}
+	
 	public String formatSqlCount(String srcSql) {
-		//TODO ORDER BY t.file_type desc,t.title asc 不适用
-		srcSql = srcSql.replaceAll("(?i)(order\\s+by\\s+(\\S+)\\s+(desc|asc))?","");
+		/*srcSql = srcSql.replaceAll("(?i)(order\\s+by\\s+(\\S+)\\s*(desc|asc)?)","")
+				       .replaceAll(",\\s*(\\S+)\\s+(desc|asc)", "");*/
+		srcSql = srcSql.replaceAll("(?i)(order.*(desc|asc))","");
 		StringBuilder sb = new  StringBuilder();
 		sb.append("SELECT COUNT(*) FROM (").append(srcSql).append(") temp");
 		return sb.toString();
 	}
-	
 	
 	private static String matchDate(String value) {
 		Set<String> formats = DATE_FORMAT_MAP.keySet();
@@ -136,7 +205,7 @@ public abstract class AbstractSqlFormatter {
 			 ParamHolder holder = new ParamHolder();
 			 String matchRet = mat.group().trim();
 			 holder.full = matchRet;
-			 //鍐嶈繘琛屾媶鍒�
+			 //
 			 Pattern pat1 = Pattern.compile("^" + COLUNM_REGEX);  
 			 Matcher mat1 = pat1.matcher(matchRet);
 			 while(mat1.find()) {
@@ -152,7 +221,7 @@ public abstract class AbstractSqlFormatter {
 			 }
 			 
 			 
-			//鍐嶈繘琛屾媶鍒�
+			//
 			 Pattern pat3 = Pattern.compile(PARAM_REGEX);  
 			 Matcher mat3 = pat3.matcher(matchRet);
 			 while(mat3.find()) {

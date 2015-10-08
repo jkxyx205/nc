@@ -85,16 +85,23 @@ public class Notice {
 
 	
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 
 
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 
 
 	@Id
@@ -103,7 +110,9 @@ public class Notice {
 	
 	private String title;
 	
-	private String userId;
+	private int userId;
+	
+	private String displayName;
 	
 	private String content;
 	

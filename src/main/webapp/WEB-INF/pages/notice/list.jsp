@@ -59,7 +59,8 @@ pageContext.setAttribute("ctx", basePath);
 	<div id="list">
 		<ol start="${start }">
 			<c:forEach var="row" items="${jqgridJsonBO.rows }">
-				<li><a target='_blank' href="${ctx }notice/gotoDetail/${ row.id}">${row.title }</a><span class="datetime"><fmt:formatDate value="${row.publishTime }" pattern="yyyy年MM月dd日 "/></span></li>
+				<li><a target='_blank' href="${ctx }html/notice/${row.y}/${row.m }/${ row.id}.html">${row.title }</a><span class="datetime"><fmt:formatDate value="${row.publishTime }" pattern="yyyy年MM月dd日 "/></span></li>
+<%-- 				<li><a target='_blank' href="${ctx }notice/gotoDetail/${ row.id}">${row.title }</a><span class="datetime"><fmt:formatDate value="${row.publishTime }" pattern="yyyy年MM月dd日 "/></span></li> --%>
 			</c:forEach>
 		</ol>
 	</div>

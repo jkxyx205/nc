@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
+import com.rick.base.context.Constants;
+
 public class CustomSimpleMappingExceptionResolver extends
 		SimpleMappingExceptionResolver {
 	
@@ -39,7 +41,7 @@ public class CustomSimpleMappingExceptionResolver extends
 				try {
 					PrintWriter writer = response.getWriter();
 					response.setStatus(500);
-					String contentType = "text/plain;charset=UTF-8";
+					String contentType = "text/plain;charset="+Constants.ENCODING+"";
 					response.setContentType(contentType);  
 					//writer.write(ex.getMessage());
 					//writer.write("系统错误，请联系管理员");

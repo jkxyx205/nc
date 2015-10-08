@@ -3,6 +3,7 @@
 	<!--自定义字典，没有形成数据库字典-->
 	<custom>
 		<key>JOB_STATUS</key>
+		<key>job_status</key>
 		<description>XXXX</description>
 		<!-- 自定义的映射 -->
 		<map>

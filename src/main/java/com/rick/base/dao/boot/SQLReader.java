@@ -3,9 +3,14 @@ package com.rick.base.dao.boot;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -25,6 +30,8 @@ public class SQLReader {
 	
 	private static final transient Logger logger = LoggerFactory
 			.getLogger(SQLReader.class);
+	
+	private static final String REPLACE_REGEX = "#[{][^#]*[}]";
 	
     private static final Map<String,QuerySQL> sqlMap = new HashMap<String,QuerySQL>();
     
@@ -62,7 +69,6 @@ public class SQLReader {
         }
 
         //handle
-
         for(Resource resource : resources) {
         	logger.info("load mapping xml =>" + resource.getFilename());
         	SAXReader reader = new SAXReader();
@@ -78,5 +84,28 @@ public class SQLReader {
                  sqlMap.put(qs.getName(),qs);
             }
         }
+        
+        for (Entry<String, QuerySQL> entry: sqlMap.entrySet()) {
+        	String s = entry.getValue().getSql();
+        	entry.getValue().setSql(getReNameSql(s));
+        }
+		
+    }
+    
+    private static String getReNameSql(String sql) {
+    	Set<String> replaceSet = new HashSet<String>();
+    	
+    	Pattern pat = Pattern.compile(REPLACE_REGEX);  
+   		Matcher mat = pat.matcher(sql);
+   		while(mat.find()) {
+   			replaceSet.add(mat.group());
+   		}
+   		
+   		for (String refName: replaceSet) {
+   			String refNameSQL = sqlMap.get(refName.replace("#{", "").replace("}", "").trim()).getSql();
+   			sql = sql.replace(refName, refNameSQL);
+   		}
+   		
+    	return sql;
     }
 }

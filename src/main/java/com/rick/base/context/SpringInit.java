@@ -21,6 +21,7 @@ public class SpringInit extends ContextLoaderListener {
     	try {
     		Constants.realContextPath = WebUtils.getRealPath(event.getServletContext(), File.separator);
     		Constants.contextPath = event.getServletContext().getContextPath();
+    		
     		WebUtils.getTempDir(event.getServletContext());
     		
     		super.contextInitialized(event);

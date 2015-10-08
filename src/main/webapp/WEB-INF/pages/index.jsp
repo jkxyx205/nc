@@ -11,10 +11,12 @@ pageContext.setAttribute("ctx", basePath);
 </head>
 <body>
 <link rel="stylesheet" href="${ctx}resources/plugin/jquery-top/jquery.top.css">
-	<div id="content">
-	
+	<div id="content" style="margin-top: 20px;">
+	  	  ${weather.name }
+		  ${weather.weatherDesc }
+		  <img src="${ctx }resources/css/images/weather/${weather.icon1 }">
+		  <img src="${ctx }resources/css/images/weather/${weather.icon2 }">
 		<h1>Infinite Scroll Testing</h1>
-		
 		<p>One for all and all for one, Muskehounds are always ready. One for all and all for one, helping everybody. One for all and all for one, it's a pretty story. Sharing everything with fun, that's the way to be. One for all and all for one, Muskehounds are always ready. One for all and all for one, helping everybody. One for all and all for one, can sound pretty corny. If you've got a problem chum, think how it could be.</p>
 
 		<p>Barnaby The Bear's my name, never call me Jack or James, I will sing my way to fame, Barnaby the Bear's my name. Birds taught me to sing, when they took me to their king, first I had to fly, in the sky so high so high, so high so high so high, so - if you want to sing this way, think of what you'd like to say, add a tune and you will see, just how easy it can be. Treacle pudding, fish and chips, fizzy drinks and liquorice, flowers, rivers, sand and sea, snowflakes and the stars are free. La la la la la, la la la la la la la, la la la la la la la, la la la la la la la la la la la la la, so - Barnaby The Bear's my name, never call me Jack or James, I will sing my way to fame, Barnaby the Bear's my name.</p>

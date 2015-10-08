@@ -15,10 +15,10 @@ public class DateConverter implements Converter<String, Date>{
 			return null;
 		
 	    try {  
-	        return Constants.SDF.parse(source);  
+	        return Constants.SDF_DATE.parse(source);  
 	    } catch (ParseException e) {  
 	        e.printStackTrace();  
-	    }         
+	    }    
 	    return null;  
 	}  
 }

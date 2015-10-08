@@ -1,5 +1,6 @@
 package com.rick.base.plugin.fileupload;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import com.rick.nc.doc.service.DocumentService;
 @Controller
 @RequestMapping("/upload")
 public class UploadController{
+	private static String NOTICE_FOLDER = File.separator + "document";
+	
 	@Resource
 	private Upload2Disk ud;
 	
@@ -46,7 +49,7 @@ public class UploadController{
 		 
 		try {
 			for (MultipartFile file : files) {
-				UploadFile uf = ud.store(file);
+				UploadFile uf = ud.store(NOTICE_FOLDER,file);
 				
 				Document doc = save2Db(pid,file,uf.getFilePath());
 				uf.setId(doc.getId());

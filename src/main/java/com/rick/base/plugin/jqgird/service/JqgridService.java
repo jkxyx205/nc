@@ -1,6 +1,8 @@
 package com.rick.base.plugin.jqgird.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -22,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -36,8 +38,9 @@ import com.rick.base.dao.BaseDaoImpl;
 import com.rick.base.dao.BaseDaoImpl.JdbcTemplateExecutor;
 import com.rick.base.dao.PageSortModel;
 import com.rick.base.dictionary.service.DictionaryUtils;
-import com.rick.base.office.excel.excel2007.ExcelRow.ExcelRowBuilder;
-import com.rick.base.office.excel.excel2007.ExcelWorkbook;
+import com.rick.base.office.excel.ExcelRow.ExcelRowBuilder;
+import com.rick.base.office.excel.ExcelVersion;
+import com.rick.base.office.excel.ExcelWorkbook;
 import com.rick.base.plugin.jqgird.JqgridJsonBO;
 import com.rick.base.util.ServletContextUtil;
 import com.rick.base.util.ZipUtil;
@@ -59,7 +62,14 @@ public class JqgridService {
 	private static final String JQGIRD_EXPORT_COLMODEL_WIDTH = "width";
 	private static final String JQGIRD_EXPORT_COLMODEL_NAME = "name";
 	
-	public static final int GROUP_NUM = 50000;
+	private static final ExcelVersion EXCEL_VERSION = ExcelVersion.V2007;
+	
+	/**
+	 * 注意：对于Excel2003 最大只能是65536,
+	 */
+	private static final int GROUP_NUM = 5000;
+	
+	private static final String ZIP_EXT = ".zip";
 	
 	@Resource
 	private BaseDaoImpl dao;
@@ -178,192 +188,223 @@ public class JqgridService {
 		return model;
 	}
 	
-	public void export(HttpServletRequest request,HttpServletResponse response) throws Exception {
-		Map<String,Object> param = ServletContextUtil.getMap(true, request);
-		final ExportModelBO model = getExportModelBO((String)param.get(JQGIRD_EXPORT_JSON));
-		
-		long total = dao.queryForSpecificParamCount(model.getQueryName(), param,new JdbcTemplateExecutor<Long>() {
+	private void export(final ExportModelBO model,Map<String,Object> param,HttpServletRequest request,HttpServletResponse response, File folder) throws Exception {
+		OutputStream os = null;
+		try {
+			long total = dao.queryForSpecificParamCount(model.getQueryName(), param,new JdbcTemplateExecutor<Long>() {
 
-			public Long query(JdbcTemplate jdbcTemplate, String queryString,
-					Object[] args) {
-				queryString = dao.formatSqlCount(queryString);
-				return jdbcTemplate.queryForObject(queryString, args, Long.class);
-			}
-		}); 
-		
-		List<ExcelWorkbook> bookList0 = null;
-		if (total > GROUP_NUM) { //zip
-			long excleNum = 0;
-			if(total % GROUP_NUM ==0) {
-				excleNum = total/GROUP_NUM;
-			} else {
-				excleNum = total/GROUP_NUM + 1;
-			}
-			bookList0 = new ArrayList<ExcelWorkbook>((int) excleNum);
-			for(long i = 0; i < excleNum; i++) {
-				ExcelWorkbook book = new ExcelWorkbook();
+				public Long query(JdbcTemplate jdbcTemplate, String queryString,
+						Object[] args) {
+					queryString = dao.formatSqlCount(queryString);
+					return jdbcTemplate.queryForObject(queryString, args, Long.class);
+				}
+			}); 
+			
+			List<ExcelWorkbook> bookList0 = null;
+			final int groupContent =  GROUP_NUM - 1;
+			if (total > groupContent) { //zip
+				long excleNum = 0;
+				if(total % groupContent ==0) {
+					excleNum = total/groupContent;
+				} else {
+					excleNum = total/groupContent + 1;
+				}
+				bookList0 = new ArrayList<ExcelWorkbook>((int) excleNum);
+				for(long i = 0; i < excleNum; i++) {
+					ExcelWorkbook book = new ExcelWorkbook(EXCEL_VERSION);
+					book.createSheet("sheet0");
+					bookList0.add(book);
+				}
+				
+			} else { //single
+				bookList0 = new ArrayList<ExcelWorkbook>(1);
+				ExcelWorkbook book = new ExcelWorkbook(EXCEL_VERSION);
 				book.createSheet("sheet0");
 				bookList0.add(book);
 			}
 			
-		} else { //single
-			bookList0 = new ArrayList<ExcelWorkbook>(1);
-			ExcelWorkbook book = new ExcelWorkbook();
-			book.createSheet("sheet0");
-			bookList0.add(book);
-		}
-		
-		final List<ExcelWorkbook> bookList = new ArrayList<ExcelWorkbook>(bookList0);
-		
-		final List<String> colNames = new ArrayList<String>();
-		
-		List<Integer> hiddenIndex = new ArrayList<Integer>();
-		
-		int i = 0;
-		for(Map<String,Object> colModel : model.getColModel()) {
-			boolean hidden = (Boolean) colModel.get("hidden");
-			boolean exp = colModel.get("exp") == null ? true : (Boolean)colModel.get("exp") ;
+			final List<ExcelWorkbook> bookList = new ArrayList<ExcelWorkbook>(bookList0);
 			
+			final List<String> colNames = new ArrayList<String>();
 			
-			String name = String.valueOf(colModel.get("name"));
-			if(!exp || hidden || name.equals("cb") || name.equals("rn")) {
-				hiddenIndex.add(i);
-			} else {
-				colNames.add((String) colModel.get(JQGIRD_EXPORT_COLMODEL_INDEX));
-			}
-			i++;
-		}
-		
-		final int len = colNames.size();
-		
-		final HeadProperty pros = getVisibleNames(model,hiddenIndex);
-		
-		for(ExcelWorkbook book: bookList) {
-			XSSFSheet sheet = book.getSheets().get(0);
-			//create excel
-			for(int w = 0; w < len; w++) {
-				sheet.setColumnWidth(w, pros.width[w] * 30);
-			}
+			List<Integer> hiddenIndex = new ArrayList<Integer>();
+			
+			int i = 0;
+			for(Map<String,Object> colModel : model.getColModel()) {
+				Object hiddenValue = colModel.get("hidden");
+				Object expValue = colModel.get("exp");
 				
-			//write head
-			book.createRow(sheet, new ExcelRowBuilder(0, 0, pros.names).style(book.getTheme().getS4()));
-		}
-		
-		final SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
-		
-		//write body
-		dao.queryForSpecificParam(model.getQueryName(), param, new JdbcTemplateExecutor<Serializable>() {
+				boolean hidden = hiddenValue == null ? false : (Boolean)hiddenValue;
+				
+				boolean exp = expValue == null ? true : (Boolean)expValue;
+				
+				String name = (String)colModel.get("name");
+				if(!exp || hidden || "cb".equals(name) || "rn".equals(name)) {
+					hiddenIndex.add(i);
+				} else {
+					colNames.add((String) colModel.get(JQGIRD_EXPORT_COLMODEL_INDEX));
+				}
+				i++;
+			}
+			
+			final int len = colNames.size();
+			
+			final HeadProperty pros = getVisibleNames(model,hiddenIndex);
+			
+			for(ExcelWorkbook book: bookList) {
+				Sheet sheet = book.getSheets().get(0);
+				//create excel
+				for(int w = 0; w < len; w++) {
+					sheet.setColumnWidth(w, pros.width[w] * 30);
+				}
+					
+				//write head
+				book.createRow(sheet, new ExcelRowBuilder(0, 0, pros.names).style(book.getTheme().getS4()));
+			}
+			
+			final SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+			
+			//write body
+			dao.queryForSpecificParam(model.getQueryName(), param, new JdbcTemplateExecutor<Serializable>() {
 
-		public Serializable query(JdbcTemplate jdbcTemplate,
-					String queryString, Object[] args) {
-				queryString = wrapSordString(queryString, model.getSidx(), model.getSord());
-				jdbcTemplate.query(queryString, args, new RowCallbackHandler() {
-					private int idx = 0;
-					private int rowIdx = 0;
-					private int bookIndex = 0;
-					private ExcelWorkbook book; 
-					private XSSFSheet sheet;
-					
-					private boolean first;
-					private Map<String,Integer> nameIndex = new HashMap<String,Integer>(len);
-					
-					
-					public void processRow(ResultSet rs) throws SQLException {
-						if(!first) {
-							first = true;
-							ResultSetMetaData rsmd = rs.getMetaData();  
-							int colCount = rsmd.getColumnCount();
-							for(int i = 0; i< colCount; i++) {
-								String s = rsmd.getColumnLabel(i+1);
-								if(colNames.contains(s)) {
-									nameIndex.put(s, i + 1);
+			public Serializable query(JdbcTemplate jdbcTemplate,
+						String queryString, Object[] args) {
+					queryString = wrapSordString(queryString, model.getSidx(), model.getSord());
+					jdbcTemplate.query(queryString, args, new RowCallbackHandler() {
+						private int idx = 0;
+						private int rowIdx = 0;
+						private int bookIndex = 0;
+						private ExcelWorkbook book; 
+						private Sheet sheet;
+						
+						private boolean first;
+						private Map<String,Integer> nameIndex = new HashMap<String,Integer>(len);
+						
+						public void processRow(ResultSet rs) throws SQLException {
+							if(!first) {
+								first = true;
+								ResultSetMetaData rsmd = rs.getMetaData();  
+								int colCount = rsmd.getColumnCount();
+								for(int i = 0; i< colCount; i++) {
+									String s = rsmd.getColumnLabel(i+1);
+									if(colNames.contains(s)) {
+										nameIndex.put(s, i + 1);
+									}
 								}
 							}
-						}
-						
-						String[] values = new String[len];
-						
-						//colNames
-						for(int i = 0; i < len ; i++) {
-							Integer index = nameIndex.get(colNames.get(i));
 							
-							if (index == null)
-								continue;
+							String[] values = new String[len];
 							
-							Object obj = JdbcUtils.getResultSetValue(rs, index);
-							if(obj == null) {
-								values[i] = "";
-								continue;
+							//colNames
+							for(int i = 0; i < len ; i++) {
+								Integer index = nameIndex.get(colNames.get(i));
+								
+								if (index == null)
+									continue;
+								
+								Object obj = JdbcUtils.getResultSetValue(rs, index);
+								if(obj == null) {
+									values[i] = "";
+									continue;
+								}
+								
+								if(obj.getClass() == java.sql.Timestamp.class) {
+									values[i] = sdf.format(obj);
+								} else if(obj.getClass() == java.sql.Date.class) {
+									values[i] = sdf.format(obj);
+								} else {
+									//translate
+									Object value = translate(pros.columnNames[i],obj);
+									values[i] = String.valueOf(value);	
+								}
+							}
+								
+							
+							if(idx % groupContent == 0) {
+								rowIdx = 0;
+								book = bookList.get(bookIndex);
+								sheet = book.getSheets().get(0);
+								bookIndex++;
 							}
 							
-							if(obj.getClass() == java.sql.Timestamp.class) {
-								values[i] = sdf.format(obj);
-							} else if(obj.getClass() == java.sql.Date.class) {
-								values[i] = sdf.format(obj);
-							} else {
-								//translate
-								Object value = translate(pros.columnNames[i],obj);
-								values[i] = String.valueOf(value);	
-							}
-						}
-							
-						
-						if(idx % GROUP_NUM == 0) {
-							rowIdx = 0;
-							book = bookList.get(bookIndex);
-							sheet = book.getSheets().get(0);
-							bookIndex++;
+							book.createRow(sheet, new ExcelRowBuilder(0, rowIdx+1, values).style(book.getTheme().getS0()));
+							idx++;
+							rowIdx++;
 						}
 						
-						book.createRow(sheet, new ExcelRowBuilder(0, rowIdx+1, values).style(book.getTheme().getS0()));
-						idx++;
-						rowIdx++;
-					}
-					
-				});
-				return null;
-			}
-			
-		});
-		
-		OutputStream os;
-		
-		//
-		String fileName = StringUtils.isBlank(model.getFileName()) ? model.getQueryName() : model.getFileName();
-		
-		
-		if(bookList.size() == 1) { //single export
-			os = ServletContextUtil.getOsFromResponse(response, request, fileName + ".xlsx");
-			bookList.get(0).write(os);
-		} else { //zip export
-			os = ServletContextUtil.getOsFromResponse(response, request, fileName + ".zip");
-			
-			int j = 0;
-			final File[] fileArr = new File[bookList.size()];
-			
-			for(ExcelWorkbook book : bookList) {
-				File file = new File(Constants.tempDir,new StringBuilder(fileName).append("_").append(j +1).append(".xlsx").toString());
-				book.write(file);
-				fileArr[j++] = file;
-			}
-			
-			//zip
-			final File file = new File(Constants.tempDir,fileName + ".zip");
-			ZipUtil.compress(fileArr, file);
-			os.write(FileUtils.readFileToByteArray(file));
-			os.close();
-			
-			//delete on exit 
-			Executor executor=Executors.newFixedThreadPool(1); 
-			executor.execute(new Runnable(){ 
-			public void run(){ 
-				file.delete();
-				for(File f : fileArr) {
-					f.delete();
+					});
+					return null;
 				}
-			} 
-			}); 
+				
+			});
+			
+			//
+			String fileName = model.getFileName();
+			
+			String fileExt = EXCEL_VERSION.getExt();
+			
+			os = getOutputStream(request,response,folder,fileName,bookList.size());
+			
+			if(bookList.size() == 1) { //single export
+				bookList.get(0).write(os);
+			} else { //zip export
+				int j = 0;
+				final File[] fileArr = new File[bookList.size()];
+				
+				for(ExcelWorkbook book : bookList) {
+					File file = new File(Constants.tempDir,new StringBuilder(fileName).append("_").append(j +1).append(fileExt).toString());
+					book.write(file);
+					fileArr[j++] = file;
+				}
+				
+				//zip
+				final File file = new File(Constants.tempDir,fileName + ZIP_EXT);
+				ZipUtil.compress(fileArr, file);
+				os.write(FileUtils.readFileToByteArray(file));
+				//delete on exit 
+				Executor executor=Executors.newFixedThreadPool(1); 
+				executor.execute(new Runnable(){ 
+				public void run(){ 
+					file.delete();
+					for(File f : fileArr) {
+						f.delete();
+					}
+				} 
+				}); 
+			}
+		} finally {
+			os.close();
 		}
+	}
+	
+	private OutputStream getOutputStream(HttpServletRequest request,HttpServletResponse response,
+			File folder, String fileName, int len) throws IOException {
+		OutputStream os = null;
+		if (len == 1) {
+			if (folder != null) 
+				os = new FileOutputStream(new File(folder,fileName + EXCEL_VERSION.getExt()));
+			else 
+				os = ServletContextUtil.getOsFromResponse(response, request, fileName + EXCEL_VERSION.getExt());
+		} else  {
+			if (folder != null) 
+				os = new FileOutputStream(new File(folder,fileName + ZIP_EXT));
+			else 
+				os = ServletContextUtil.getOsFromResponse(response, request, fileName + ZIP_EXT);
+		}
+		return os;
+	}
+	public void export(HttpServletRequest request,HttpServletResponse response) throws Exception {
+		Map<String,Object> param = ServletContextUtil.getMap(true, request);
+		final ExportModelBO model = getExportModelBO((String)param.get(JQGIRD_EXPORT_JSON));
+	 
+		export(model, param,request,response,null);
+	}
+	
+	public void export(final ExportModelBO model,Map<String,Object> param,File file) throws Exception {
+		if (file == null || file.isFile())
+			throw new FileNotFoundException("the directory is not exists!");
+		export(model, param,null,null,file);
+		
 	}
 	
 	private HeadProperty getVisibleNames(ExportModelBO model, List<Integer> hiddenIndex) {

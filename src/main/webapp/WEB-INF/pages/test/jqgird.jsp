@@ -165,12 +165,6 @@ $(function() {
 			}
 		});
 	}
-	
-	
-
-	
-	
-	
 </script>
 </body>
 </html>

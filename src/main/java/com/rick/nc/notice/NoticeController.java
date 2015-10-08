@@ -4,11 +4,14 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.rick.base.context.auth.ContextLoader;
+import com.rick.base.context.auth.entity.User;
 import com.rick.nc.notice.model.Notice;
 import com.rick.nc.notice.service.NoticeService;
 
@@ -47,9 +50,12 @@ public class NoticeController {
 	public String saveNotice(Notice notice,String noticeStatus) {
 		Date now = new Date();
 		
+		User user = ContextLoader.getCurrentUser();
+		
 		Integer id = notice.getId();
 		if (id == null) {
-			notice.setUserId("admin");
+			notice.setUserId(user.getId());
+			notice.setDisplayName(user.getDisplayName());
 			notice.setNoticeStatus(Notice.Status.PUBLISHED.name());
 			notice.setCreateTime(new Date());
 			notice.setUpdateTime(now);
@@ -80,9 +86,12 @@ public class NoticeController {
 	
 	@RequestMapping("/list/{currentPage}")
 	public String gotoList(String title,@PathVariable int currentPage,Model model) throws Exception {
+		if (StringUtils.isNotBlank(title))
+			title = new String(title.getBytes("iso-8859-1"),"utf-8");
+		
 		model.addAttribute("jqgridJsonBO", noticeService.getPageList(title, currentPage, ROWS));
 		model.addAttribute("start", (currentPage-1) * ROWS + 1);
-		model.addAttribute("title", title);
+		
 		return "/notice/list";
 	}
 }

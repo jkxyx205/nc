@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.GenerationType;
+import javax.sql.DataSource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -58,6 +59,9 @@ public class BaseDaoImpl {
 
 	@Resource(name = "jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
+	
+	@Resource(name="dataSource2")
+	private DataSource dataSource;
 
 	//@Resource(name = "sessionFactory")
 	private SessionFactory sessionFactory;
@@ -73,6 +77,11 @@ public class BaseDaoImpl {
 			sqlFormatter = new MysqlSqlFormatter();
 	}
 	
+	
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
 	public Dialect getDialect() {
 		return dialect;
 	}
@@ -140,7 +149,7 @@ public class BaseDaoImpl {
 
 		Object[] args = NamedParameterUtils.buildValueArray(formatSql,
 				formatMap);
-		logger.debug(formatSql + "=>" + formatMap);
+		logger.debug("[" + queryName +"]" +formatSql + "=>" + formatMap);
 		if(dialect == Dialect.MYSQL)
 			formatSql = formatSql.replaceAll(AbstractSqlFormatter.PARAM_REGEX, "?");
 		return jdbcTemplateExecutor.query(jdbcTemplate, formatSql, args);
@@ -183,7 +192,7 @@ public class BaseDaoImpl {
 		if(dialect == Dialect.MYSQL)
 			formatSql = formatSql.replaceAll(AbstractSqlFormatter.PARAM_REGEX, "?");
 		int count = jdbcTemplate.update(formatSql, args);
-		logger.debug(formatSql + "=>" + formatMap);
+		logger.debug("[" + queryName +"]" +formatSql + "=>" + formatMap);
 		
 		return count;
 	}
@@ -219,7 +228,7 @@ public class BaseDaoImpl {
 		formatSql = sqlFormatter.formatSqlCount(formatSql);
 		Object[] args = NamedParameterUtils.buildValueArray(formatSql,
 				formatMap);
-		logger.debug(formatSql + "=>" + formatMap);
+		logger.debug("[" + queryName +"]" +formatSql + "=>" + formatMap);
 		if(dialect == Dialect.MYSQL)
 			formatSql = formatSql.replaceAll(AbstractSqlFormatter.PARAM_REGEX, "?");
 		return jdbcTemplate.queryForObject(formatSql, args, Long.class);
@@ -291,6 +300,8 @@ public class BaseDaoImpl {
 		
 		if (dialect == Dialect.MYSQL)
 			sql = sql.replaceAll(AbstractSqlFormatter.PARAM_REGEX, "?");
+		
+		logger.debug("[" + clazz + "]" +  sb.toString());
 		
 		return jdbcTemplate.query(sql, args, new ResultSetExtractor<T>() {
 
@@ -399,7 +410,7 @@ public class BaseDaoImpl {
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append(")");
 		
-		logger.debug(sb.toString());
+		logger.debug("[" + entity + "]" +  sb.toString());
 		
 		if(!insertId||sequence) {
 			final String sql = sb.toString();
@@ -506,7 +517,7 @@ public class BaseDaoImpl {
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append(" WHERE ").append(ed.getPrimaryKey()).append(" = ?");
 		
-		logger.debug(sb.toString());
+		logger.debug("[" + entity + "]" +  sb.toString());
 		jdbcTemplate.update(sb.toString(), args);
 		
 	}
@@ -537,7 +548,7 @@ public class BaseDaoImpl {
 		}
 		
 		
-		logger.debug(sb.toString());
+		logger.debug("[" + entity + "]" +  sb.toString());
 		jdbcTemplate.update(sb.toString(), new Object[]{id});
 	}
 	

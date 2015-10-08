@@ -34,15 +34,17 @@ $(function() {
 		queryName:"notice.index",
 		fileName:"teacherInfo",
 		//data:{"name":"Rick.Xu"},
-		colNames:['id','title','userId','notice_status','publishTime','operator'], 
+		colNames:['id','y','m','title','userId','notice_status','publishTime','operator'], 
 		colModel:[
 	             {name:'id',index:'id', width:60,hidden:true},
+	             {name:'y',index:'y', width:60,hidden:true},
+	             {name:'m',index:'m', width:60,hidden:true},
 	             {name:'title',index:'title', width:250},
 	             {name:'userId',index:'userId', width:100}, 
 	             {name:'notice_status',index:'notice_status', align:'center',width:100}, 
 	             {name:'publishTime',index:'publishTime',align:'center', width:100},
-	             {name:'operator',index:'operator', width:100,align:'center',formatter:function(cellvalue, options, rowObject) {
-	            		 return '<a target="_blank" href="'+ctx+'notice/gotoDetail/'+rowObject.id+'">查看</a>&nbsp;&nbsp;<a href="${ctx}gotoAdd/'+rowObject.id+'">编辑</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="del(\''+rowObject.id+'\')">删除</a>';
+	             {name:'operator',index:'operator', width:100,align:'center',exp:false,formatter:function(cellvalue, options, rowObject) {
+	            		 return '<a target="_blank" href="'+ctx+'html/notice/'+rowObject.y+'/'+rowObject.m+'/'+rowObject.id+'.html">查看</a>&nbsp;&nbsp;<a href="${ctx}gotoAdd/'+rowObject.id+'">编辑</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="del(\''+rowObject.id+'\')">删除</a>';
 	            
 	             }}
 	     ], 

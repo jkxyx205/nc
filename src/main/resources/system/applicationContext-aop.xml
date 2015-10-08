@@ -20,7 +20,7 @@
 	
 	 <aop:config>
 		<aop:aspect id="aspect" ref="CalTime">
-			<aop:pointcut id="pointUserMgr" expression="execution(* com..service..*.*(..))"/>
+			<aop:pointcut id="pointUserMgr" expression="(execution(* com..service..*.*(..))) or (execution(* com.rick.base.plugin.fileimport.handle.AbstractTransfer.transfer(..)))"/>
 			
 			<aop:before method="doBefore"  pointcut-ref="pointUserMgr"/>
 			<aop:after method="doAfter"  pointcut-ref="pointUserMgr"/>

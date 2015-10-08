@@ -47,7 +47,9 @@ public class ServiceAOP {
      */  
     public void doAfter(JoinPoint joinPoint) { 
     	long endTime = System.currentTimeMillis();
-    	logger.info(joinPoint.getSignature().getName() +" execute Time:" + (endTime-etLocal.get()) + "ms");
+//    	joinPoint.getSignature()
+//    	joinPoint.getArgs()
+    	logger.info(joinPoint.getSignature() +" execute Time:" + (endTime-etLocal.get()) + "ms");
     }  
       
     /** 

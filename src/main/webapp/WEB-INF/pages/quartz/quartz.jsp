@@ -54,18 +54,18 @@ $(function() {
 					queryName:"scheduleJobList",
 					colNames:['ID','JOB_NAME','JOB_GROUP','CRON_EXPRESSION','JOB_STATUS','JOB_STATUS_VALUE','Operation'], //i18n
 					colModel:[
-							 {name:'ID',index:'ID', hidden:true,key:true},
-		                     {name:'JOB_NAME',index:'JOB_NAME', width:60},
-		                     {name:'JOB_GROUP',index:'JOB_GROUP', width:100},
-		                     {name:'CRON_EXPRESSION',index:'CRON_EXPRESSION', width:50}, 
-		                     {name:'JOB_STATUS',index:'JOB_STATUS', width:50},
-		                     {name:'JOB_STATUS_VALUE',index:'JOB_STATUS_VALUE',hidden:true},
-		                     {name:'Operation',index:'Operation', width:100,formatter:function(cellvalue,options, rowObject) {
-		                    	 var id = rowObject["ID"];
+							 {name:'id',index:'id', hidden:true,key:true},
+		                     {name:'job_name',index:'job_name', width:60},
+		                     {name:'job_group',index:'job_group', width:100},
+		                     {name:'cron_expression',index:'cron_expression', width:50}, 
+		                     {name:'job_status',index:'job_status', width:50},
+		                     {name:'job_status_value',index:'job_status_value',hidden:true},
+		                     {name:'operation',index:'operation', width:100,formatter:function(cellvalue,options, rowObject) {
+		                    	 var id = rowObject["id"];
 		                    	 var btn = ["<button onclick='changeExpression("+id+")'>设置参数</button>"];
-		                    	 if(rowObject['JOB_STATUS_VALUE'] == "0") {
+		                    	 if(rowObject['job_status_value'] == "0") {
 		                    		 btn.push("<button onclick='changJobStatus("+id+",1,this)'>开启</button>");
-		                    	 } else if(rowObject['JOB_STATUS_VALUE'] == "1") {
+		                    	 } else if(rowObject['job_status_value'] == "1") {
 		                    		 btn.push("<button onclick='changJobStatus("+id+",0,this)'>暂停</button>");
 		                    	 }
 		                    	 
@@ -110,8 +110,8 @@ $(function() {
 	function changeExpression(id) {
 		var rowDatas = $gird.jqGrid('getRowData', id);
 		$("#id").val(id);
-	 	$("#jobName").text(rowDatas["JOB_NAME"]);
-	  	$("#cronExpression").val(rowDatas["CRON_EXPRESSION"]);
+	 	$("#jobName").text(rowDatas["job_name"]);
+	  	$("#cronExpression").val(rowDatas["cron_expression"]);
 	  	
 		$("#exampleModal").modal('show');
 	}

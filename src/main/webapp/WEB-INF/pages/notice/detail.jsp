@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
@@ -31,7 +32,7 @@ pageContext.setAttribute("ctx", basePath);
 	<div style="border: 1px solid #BCBCBC; border-top: 2px solid #0D3387">
 		<div style="text-align: center;">
 			<h1 class="title">${notice.title }</h1>
-			<span style="color:#BCBCBC;font-size: 11px;">作者：${notice.userId } 发布时间：<fmt:formatDate value="${notice.publishTime }" pattern="yyyy年MM月dd日 "/>
+			<span style="color:#BCBCBC;font-size: 11px;">作者：${notice.displayName } 发布时间：<fmt:formatDate value="${notice.publishTime }" pattern="yyyy年MM月dd日 "/>
 			<a href="javascript:void()" style="font-size:13px;" onclick="window.close();">[关闭]</a></span>
 		</div>
 		<div style="margin: 10px 30px; border-top: 1px solid #BCBCBC; padding-top:20px;">${notice.content }</div>

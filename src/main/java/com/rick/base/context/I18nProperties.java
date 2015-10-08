@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.rick.base.office.excel.ExcelReader;
 import com.rick.base.office.excel.ExcelResultSet;
-import com.rick.base.office.excel.excel2007.ExcelReader;
-import com.spreada.utils.chinese.ZHConverter;
+import com.rick.base.office.excel.ExcelVersion;
 
 /**
  * @author Rick.Xu
@@ -74,7 +74,7 @@ public final class I18nProperties {
 		final List<List<String>> jsList = new ArrayList<List<String>>();
 		
 		
-		ExcelReader.readExcelContent(new FileInputStream(excelTemplate), new ExcelResultSet() {
+		new ExcelReader(ExcelVersion.V2007).readExcelContent(new FileInputStream(excelTemplate), new ExcelResultSet() {
 			
 			private int zh = 0;
 			
@@ -218,10 +218,11 @@ public final class I18nProperties {
 	}
 	
     private String SimToTra(String simpStr) {  
-        ZHConverter converter = ZHConverter  
+       /* ZHConverter converter = ZHConverter  
                 .getInstance(ZHConverter.TRADITIONAL);  
         String traditionalStr = converter.convert(simpStr);  
-        return traditionalStr;  
+        return traditionalStr;  */
+    	return simpStr;
     } 
 
 }

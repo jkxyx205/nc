@@ -1,7 +1,8 @@
 package com.rick.base.context;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+
+import org.apache.commons.lang3.time.FastDateFormat;
 
 
 public final class Constants {
@@ -11,14 +12,15 @@ public final class Constants {
 	
 	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	
-	public static final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT);
+	public static final String HTML_EXT = ".html";
 	
-	public static final SimpleDateFormat SDF_TIME = new SimpleDateFormat(DATETIME_FORMAT);
+	public static final FastDateFormat SDF_DATE = FastDateFormat.getInstance(DATE_FORMAT);
 	
+	public static final FastDateFormat SDF_TIME = FastDateFormat.getInstance(DATETIME_FORMAT);
 	
 	public static String realContextPath;
 	
 	public static String contextPath;
 	
-	public static File tempDir;
+	public static File tempDir = new File("");
 }

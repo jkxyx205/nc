@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>  
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -64,8 +65,15 @@ pageContext.setAttribute("ctx", basePath);
 		<div id="nav_div" >	
 			<nav class="navbar" style="border:0; width:920px; margin: 0 auto; ">
 			 <div style="padding-bottom: 5px;">
-		   	<img src="http://j.xhd.cn/r/cms/suzhou/default/index/img/logo1.png">
-		  </div>
+		  	 	<img src="http://j.xhd.cn/r/cms/suzhou/default/index/img/logo1.png">
+		   	</div>
+		   	<div style="height:20px;">
+		   		<p style="font-size:11px;text-indent: 2em;">
+		   			 欢迎您，<span style="color:#0D3387;">${USER.displayName }</span>,今天是
+		   			 <fmt:formatDate value="<%=new java.util.Date() %>" type="both" pattern="yyyy-MM-dd EEEE"/>
+		   			 <a href="${ctx }login/logout">[注销]</a>
+		   		</p>
+		   	</div>
 		 
 		  <div class="container-fluid">
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -84,7 +92,7 @@ pageContext.setAttribute("ctx", basePath);
 		            
 		          </ul>
 		        </li>
-		         <li class="dropdown">
+		        <%--  <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">助教工作<span class="caret"></span></a>
 		          <ul class="dropdown-menu" >
 		            <li><a href="${ctx}teacher/list">助教排班</a></li>
@@ -99,7 +107,7 @@ pageContext.setAttribute("ctx", basePath);
 		            <li><a href="${ctx}teacher/list">我的课表</a></li>
 		            <li><a href="${ctx}teacher/list">我的缺勤</a></li>
 		          </ul>
-		        </li>
+		        </li> --%>
 		         <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">通知公告<span class="caret"></span></a>
 		          <ul class="dropdown-menu" >
@@ -107,14 +115,14 @@ pageContext.setAttribute("ctx", basePath);
 		            <li><a href="${ctx}notice/gotoIndexPage">发布公告</a></li>
 		          </ul>
 		        </li>
-		        <li><a href="${ctx}doc/index">知识库</a></li>
-		        <li><a href="${ctx}demo/list">我的空间</a></li>
-		        <li><a href="${ctx}demo/list">报表管理</a></li>
+		        	<li><a href="${ctx}doc/index">知识库</a></li>
+		       <%--  <li><a href="${ctx}demo/list">我的空间</a></li>
+		        <li><a href="${ctx}demo/list">报表管理</a></li> --%>
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理<span class="caret"></span></a>
 		          <ul class="dropdown-menu">
 		            <li><a href="${ctx}teacher/list">密码维护</a></li>
-		            <li><a href="#">用户管理</a></li>
+		            <li><a href="${ctx }user/gotoUserList">用户管理</a></li>
 		            <li><a href="#">角色管理</a></li>
 		            <li><a href="#">授权管理</a></li>
 		            <li><a href="#">日志管理</a></li>
@@ -193,17 +201,18 @@ pageContext.setAttribute("ctx", basePath);
 		
 		$(document).keydown(function(event) {
             if (event.keyCode == "13") {
-          
             	var activeElement = document.activeElement.tagName;
             	if (!(activeElement === "INPUT" || activeElement === "SELECT")) {
                 	return;
                 }
-            	var searchBtn = $("[name=search]");
-            	if (searchBtn.length > 0) {
-            		searchBtn.click();
-                	event.preventDefault();
-            	}
             	
+            	if ($(document.activeElement).parents('form').length > 0) {
+            		var searchBtn = $("[name=search]");
+                	if (searchBtn.length > 0) {
+                		searchBtn.click();
+                    	event.preventDefault();
+                	}
+            	}
             }
         });
 	});

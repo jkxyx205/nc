@@ -2,7 +2,7 @@
 <hibernate-mapping>
  <sql-query name="notice.index">
  	<![CDATA[
- 		select id,title,content,userId,notice_status,updateTime,publishTime FROM nc_notice where title like :title
+ 		select id,title,content,userId,displayName,notice_status,updateTime,publishTime,date_format(publishTime,'%Y') y,date_format(publishTime,'%m') m FROM nc_notice where title like :title
     ]]>
 </sql-query>
 
@@ -14,7 +14,7 @@
 
 <sql-query name="notice.list">
  	<![CDATA[
- 		select id,title,content,userId,notice_status,updateTime,publishTime FROM nc_notice 
+ 		select id,title,content,userId,notice_status,updateTime,publishTime,date_format(publishTime,'%Y') y,date_format(publishTime,'%m') m FROM nc_notice 
  		where title like :title and notice_status = 'PUBLISHED'
     ]]>
 </sql-query>

@@ -1,5 +1,6 @@
 package com.rick.base.plugin.ckeditor;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import com.rick.base.plugin.fileupload.vo.UploadFile;
 @Controller
 @RequestMapping("/ckeditor")
 public class CkEditorController {
+	private static String NOTICE_FOLDER = File.separator + "notice";
 	@Resource
 	private Upload2Disk ud;
 
@@ -33,7 +35,7 @@ public class CkEditorController {
 	     // 获得文件：     
 		 MultipartFile file = multipartRequest.getFile("upload");
 		 
-		 UploadFile ufile = ud.store(file);
+		 UploadFile ufile = ud.store(NOTICE_FOLDER,file);
 		 
 		 String callback = request.getParameter("CKEditorFuncNum");  
 		 
@@ -54,7 +56,7 @@ public class CkEditorController {
 		 
 		try {
 			for (MultipartFile file : files) {
-				UploadFile uf = ud.store(file);
+				UploadFile uf = ud.store(NOTICE_FOLDER,file);
 				retList.add(uf);
 			}
 		} catch (FileNotFoundException e) {

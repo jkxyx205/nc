@@ -10,14 +10,37 @@
 				jobType,
 				workWay,
 				education
-			FROM nc_teacher  WHERE status = '1' AND name = :name
+			FROM nc_teacher  WHERE status = '1' AND name like :name
     ]]>
 </sql-query>
 
  <sql-query name="teacher.deleteById">
  	<![CDATA[
- 		 DELETE FROM nc_teacher WHERE id = :id
+ 		 DELETE FROM nc_teacher WHERE id = :id 
     ]]>
+    
 </sql-query>
 
+
+<sql-query name="teacher.deleteByIdtest">
+ 		 DELETE FROM nc_teacher WHERE id = :id 
+</sql-query>
+
+<sql-query name="test.abc">
+ 		select #{test.column} from account #{test.where } 
+</sql-query>
+
+
+<sql-query name="test.column">
+ 		id, name ,money
+</sql-query>
+
+<sql-query name="test.where">
+<![CDATA[
+ 		where name in (:name) and id = :id
+ 		#if ($foo < 10)
+ 		and sex = :sex
+ 		#end 
+ 	]]>
+</sql-query>
 </hibernate-mapping>

@@ -3,7 +3,9 @@ package com.rick.base.plugin.jqgird.service;
 import java.util.List;
 import java.util.Map;
 
-class ExportModelBO {
+import org.apache.commons.lang.StringUtils;
+
+public class ExportModelBO {
 	private String queryName;
 	private	String sidx;
 	private String sord;
@@ -21,7 +23,7 @@ class ExportModelBO {
 		this.reloadAll = reloadAll;
 	}
 	public String getFileName() {
-		return fileName;
+		return StringUtils.isBlank(fileName) ? getQueryName() : fileName;
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;

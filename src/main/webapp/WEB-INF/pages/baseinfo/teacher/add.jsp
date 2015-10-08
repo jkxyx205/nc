@@ -170,7 +170,7 @@ pageContext.setAttribute("ctx", basePath);
  	        dataType: 'json',
  	        formData:{"pid":1},
  	        done: function (e, data) {
- 	        	$("#headImg").attr("src","${ctx}" + data.result.filePath);
+ 	        	$("#headImg").attr("src",data.result.visitUrl);
  	        },
  	        progressall: function (e, data) {
  	        }

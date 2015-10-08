@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
+import com.rick.base.context.Constants;
+
 
 /**
  * @author Rick.Xu
@@ -26,22 +28,22 @@ public class ServletContextUtil {
 		String browserType = request.getHeader("User-Agent").toLowerCase();
 		
 		if(browserType.indexOf("firefox") > -1) { //FF
-			_fileName = "=?UTF-8?B?"+(new String(Base64.encodeBase64(_fileName.getBytes("UTF-8"))))+"?=";
+			_fileName = "=?"+Constants.ENCODING+"?B?"+(new String(Base64.encodeBase64(_fileName.getBytes(Constants.ENCODING))))+"?=";
 		} else {
 			if(fileName.matches(".*[^\\x00-\\xff]+.*")) {
 				if(request.getHeader("User-Agent").toLowerCase().indexOf("msie") > -1) { //IE
-					_fileName = java.net.URLEncoder.encode(_fileName,"utf-8");
+					_fileName = java.net.URLEncoder.encode(_fileName,Constants.ENCODING);
 				} else  { //其他
-					_fileName = new String(_fileName.getBytes("utf-8"), "ISO-8859-1");
+					_fileName = new String(_fileName.getBytes(Constants.ENCODING), "ISO-8859-1");
 				}
 			}
 		}
  
         response.reset();// 清空输出流   
-        response.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding(Constants.ENCODING);
 		
         response.setHeader("Content-disposition", "attachment; filename="+_fileName+"");// 设定输出文件头   
-        response.setContentType("application/vnd.ms-excel;charset=utf-8");// 定义输出类型 
+        response.setContentType("application/vnd.ms-excel;charset="+Constants.ENCODING+"");// 定义输出类型 
         os = response.getOutputStream(); // 取得输出流   
 		return os;
 	}

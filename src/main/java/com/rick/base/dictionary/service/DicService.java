@@ -165,7 +165,7 @@ public class DicService {
 			FileUtils.writeStringToFile(f2, 
 					"var dicMap = " + Json + ";" +
 					"var aligns = "+Json2+"",
-					"utf-8");
+					Constants.ENCODING);
 		}
 			  
 		 
